@@ -41,7 +41,18 @@ if not secret_key:
 
 app.secret_key = secret_key
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///progoal.db"
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+    database_url = database_url.replace(
+        "postgres://",
+        "postgresql://",
+        1
+    )
+else:
+    database_url = "sqlite:///progoal.db"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 app.config["UPLOAD_FOLDER"] = os.path.join(
