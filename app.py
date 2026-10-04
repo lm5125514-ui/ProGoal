@@ -15,6 +15,8 @@ from flask import (
 
 from werkzeug.security import check_password_hash
 from flask_wtf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from database import db
 from models import Product, Order, OrderItem, Admin
@@ -47,7 +49,11 @@ app.config["SESSION_COOKIE_SECURE"] = False
 
 # CSRF-защита
 csrf = CSRFProtect(app)
-
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=[]
+)
 
 # Подключаем базу данных
 db.init_app(app)
@@ -517,6 +523,7 @@ def remove_from_cart(product_id):
     "/admin/login",
     methods=["GET", "POST"]
 )
+@limiter.limit("5 per minute", methods=["POST"])
 def admin_login():
 
     if request.method == "POST":
