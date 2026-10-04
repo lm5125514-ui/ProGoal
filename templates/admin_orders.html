@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Заказы — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+            </svg>
+
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('cart') }}">
+            Корзина
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}">
+            Выйти
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="admin-page-new">
+
+    <div class="admin-top-line">
+
+        <span>
+            PROGOAL / ADMIN
+        </span>
+
+        <span>
+            ORDERS
+        </span>
+
+    </div>
+
+
+    <div class="admin-heading">
+
+        <div>
+
+            <span class="admin-kicker">
+                CONTROL PANEL
+            </span>
+
+            <h1>
+                ЗАКАЗЫ
+            </h1>
+
+        </div>
+
+        <div class="admin-heading-info">
+
+            <span>
+                Всего заказов
+            </span>
+
+            <strong>
+                {{ orders|length }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    {% if orders %}
+
+        <div class="admin-orders-list">
+
+            {% for order in orders %}
+
+                <a href="{{ url_for('admin_order_detail', order_id=order.id) }}"
+                   class="admin-order-card">
+
+                    <div class="admin-order-number">
+
+                        <span>
+                            ORDER
+                        </span>
+
+                        <strong>
+                            #{{ order.id }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-order-main">
+
+                        <span class="admin-order-label">
+                            ПОКУПАТЕЛЬ
+                        </span>
+
+                        <h2>
+                            {{ order.customer_name }}
+                        </h2>
+
+                        <p>
+                            {{ order.customer_phone }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="admin-order-address">
+
+                        <span>
+                            АДРЕС
+                        </span>
+
+                        <p>
+                            {{ order.customer_address }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="admin-order-total">
+
+                        <span>
+                            СУММА
+                        </span>
+
+                        <strong>
+                            {{ order.total }} ₽
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-order-status">
+
+                        <span class="admin-status">
+                            {{ order.status }}
+                        </span>
+
+                        <span class="admin-order-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-empty">
+
+            <span>
+                NO ORDERS
+            </span>
+
+            <h2>
+                Заказов пока нет
+            </h2>
+
+            <p>
+                Когда покупатель оформит заказ,
+                он появится здесь.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+
+    </div>
+
+    <p>
+        © 2026 ProGoal. Панель управления.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

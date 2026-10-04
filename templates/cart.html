@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Корзина — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <div class="brand-mark">
+            <span>P</span>
+            <span>G</span>
+        </div>
+
+        <div class="brand-text">
+            <strong>PROGOAL</strong>
+            <small>PLAY BEYOND</small>
+        </div>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}" class="nav-cart active">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="cart-page-new">
+
+    <!-- HEADER -->
+
+    <section class="cart-heading-new">
+
+        <div class="cart-heading-top">
+
+            <span>
+                PROGOAL / CART
+            </span>
+
+            <span>
+                SHOPPING BAG
+            </span>
+
+        </div>
+
+
+        <div class="cart-heading-content">
+
+            <div>
+
+                <span class="cart-kicker">
+                    Твои товары
+                </span>
+
+                <h1>
+                    КОРЗИНА
+                </h1>
+
+            </div>
+
+            {% if products %}
+
+            <p>
+                Проверь выбранные товары
+                перед оформлением заказа.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    {% if products %}
+
+    <!-- PRODUCTS -->
+
+    <section class="cart-content-new">
+
+
+        <div class="cart-products-new">
+
+            <div class="cart-products-header-new">
+
+                <span>
+                    ТОВАР
+                </span>
+
+                <span>
+                    КОЛИЧЕСТВО
+                </span>
+
+                <span>
+                    СУММА
+                </span>
+
+            </div>
+
+
+            {% for item in products %}
+
+            <article class="cart-item-new"
+                     data-product-id="{{ item.product.id }}">
+
+
+                <!-- PRODUCT VISUAL -->
+
+                <div class="cart-product-visual">
+
+                    <span class="cart-product-number">
+                        {{ "%02d"|format(loop.index) }}
+                    </span>
+
+                    <span class="cart-product-logo">
+                        PG
+                    </span>
+
+                </div>
+
+
+                <!-- PRODUCT INFO -->
+
+                <div class="cart-product-info-new">
+
+                    <span class="cart-product-category-new">
+                        {{ item.product.category }}
+                    </span>
+
+                    <h2>
+                        {{ item.product.name }}
+                    </h2>
+
+                    <p>
+                        {{ item.product.brand }}
+                    </p>
+
+                    <span class="cart-product-unit-price">
+                        {{ item.product.price }} ₽ / шт.
+                    </span>
+
+                </div>
+
+
+                <!-- QUANTITY -->
+
+                <div class="cart-quantity-new">
+
+                    <button type="button"
+                            class="cart-quantity-button"
+                            onclick="updateCart(
+                                {{ item.product.id }},
+                                'decrease',
+                                this
+                            )">
+                        −
+                    </button>
+
+                    <span class="quantity-value">
+                        {{ item.quantity }}
+                    </span>
+
+                    <button type="button"
+                            class="cart-quantity-button"
+                            onclick="updateCart(
+                                {{ item.product.id }},
+                                'increase',
+                                this
+                            )">
+                        +
+                    </button>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="cart-product-total-new">
+
+                    <span class="item-total-value">
+                        {{ item.product.price * item.quantity }}
+                    </span>
+
+                    <span>
+                        ₽
+                    </span>
+
+                </div>
+
+
+                <!-- REMOVE -->
+
+                <form method="POST"
+                      action="{{ url_for(
+                          'remove_from_cart',
+                          product_id=item.product.id
+                      ) }}">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <button type="submit"
+                            class="cart-remove-new">
+                        ×
+                    </button>
+
+                </form>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <aside class="cart-summary-new">
+
+            <div class="cart-summary-label">
+                ORDER SUMMARY
+            </div>
+
+
+            <div class="cart-summary-row">
+
+                <span>
+                    Товары
+                </span>
+
+                <strong class="cart-total-value">
+                    {{ total }} ₽
+                </strong>
+
+            </div>
+
+
+            <div class="cart-summary-row">
+
+                <span>
+                    Доставка
+                </span>
+
+                <span class="cart-free">
+                    БЕСПЛАТНО
+                </span>
+
+            </div>
+
+
+            <div class="cart-summary-divider"></div>
+
+
+            <div class="cart-summary-total">
+
+                <span>
+                    ИТОГО
+                </span>
+
+                <strong>
+                    {{ total }} ₽
+                </strong>
+
+            </div>
+
+
+            <a href="{{ url_for('checkout') }}"
+               class="cart-checkout-new">
+
+                <span>
+                    Оформить заказ
+                </span>
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('catalog') }}"
+               class="cart-continue-new">
+
+                Продолжить покупки
+
+            </a>
+
+        </aside>
+
+    </section>
+
+
+    {% else %}
+
+    <!-- EMPTY CART -->
+
+    <section class="cart-empty-new">
+
+        <div class="cart-empty-number">
+            01
+        </div>
+
+        <div class="cart-empty-icon">
+            PG
+        </div>
+
+        <h2>
+            КОРЗИНА ПУСТА
+        </h2>
+
+        <p>
+            Добавь товары из каталога,
+            чтобы продолжить.
+        </p>
+
+        <a href="{{ url_for('catalog') }}"
+           class="cart-empty-button">
+
+            Перейти в каталог →
+
+        </a>
+
+    </section>
+
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            PROGOAL
+        </div>
+
+        <div class="footer-text">
+            Всё для твоей игры.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 ProGoal
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+async function updateCart(productId, action, button) {
+
+    try {
+
+        const csrfToken =
+            document.querySelector(
+                'input[name="csrf_token"]'
+            ).value;
+
+
+        const response = await fetch(
+            `/cart/update-ajax/${productId}/${action}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "X-CSRFToken": csrfToken
+                }
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!data.success) {
+            alert(data.message);
+            return;
+        }
+
+
+        const cartItem =
+            button.closest(".cart-item-new");
+
+
+        if (data.quantity === 0) {
+
+            cartItem.remove();
+
+        } else {
+
+            const quantityElement =
+                cartItem.querySelector(
+                    ".quantity-value"
+                );
+
+            quantityElement.textContent =
+                data.quantity;
+
+
+            const itemTotalElement =
+                cartItem.querySelector(
+                    ".item-total-value"
+                );
+
+            itemTotalElement.textContent =
+                data.item_total;
+        }
+
+
+        const totalElements =
+            document.querySelectorAll(
+                ".cart-total-value, .cart-summary-total strong"
+            );
+
+
+        totalElements.forEach(element => {
+
+            element.textContent =
+                data.total + " ₽";
+
+        });
+
+
+        const remainingItems =
+            document.querySelectorAll(
+                ".cart-item-new"
+            ).length;
+
+
+        if (remainingItems === 0) {
+            location.reload();
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось изменить корзину."
+        );
+
+    }
+
+}
+
+</script>
+
+
+</body>
+</html>

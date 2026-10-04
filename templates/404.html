@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>404 — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="error-page">
+
+<main class="error-page-inner">
+
+    <div class="error-top">
+        <span>PROGOAL / ERROR</span>
+        <span>404</span>
+    </div>
+
+
+    <section class="error-content">
+
+        <div class="error-number">
+            404
+        </div>
+
+        <div class="error-line"></div>
+
+        <span class="error-kicker">
+            PAGE NOT FOUND
+        </span>
+
+        <h1>
+            ЗДЕСЬ<br>
+            ПУСТО
+        </h1>
+
+        <p>
+            Страница, которую ты ищешь,
+            не существует или была перемещена.
+        </p>
+
+        <a href="{{ url_for('home') }}"
+           class="error-button">
+
+            <span>
+                НА ГЛАВНУЮ
+            </span>
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+    </section>
+
+
+    <div class="error-footer">
+        <span>PROGOAL</span>
+        <span>PLAY BEYOND</span>
+    </div>
+
+</main>
+
+</body>
+
+</html>

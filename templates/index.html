@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ProGoal — Всё для твоей игры</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+            </svg>
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}" class="nav-cart">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-label">
+                FOOTBALL EQUIPMENT
+            </div>
+
+            <h1>
+                PROGOAL
+            </h1>
+
+            <h2>
+                Всё для твоей игры
+            </h2>
+
+            <p>
+                Футбольная форма, бутсы, мячи
+                и экипировка для настоящих игроков.
+            </p>
+
+            <a href="{{ url_for('catalog') }}" class="button">
+                Перейти в каталог
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section class="categories">
+
+        <div class="section-heading">
+
+            <span class="section-kicker">
+                PROGOAL COLLECTION
+            </span>
+
+            <h2 class="section-title">
+                Категории
+            </h2>
+
+        </div>
+
+
+        <div class="category-grid">
+
+
+            <a class="category-card"
+               href="{{ url_for('catalog', category='Футбольная форма') }}">
+
+                <div class="category-number">
+                    01
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Футбольная форма
+                    </h3>
+
+                    <p>
+                        Футболки, шорты и комплекты
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+            <a class="category-card"
+               href="{{ url_for('catalog', category='Бутсы') }}">
+
+                <div class="category-number">
+                    02
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Бутсы
+                    </h3>
+
+                    <p>
+                        Обувь для любого покрытия
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+            <a class="category-card"
+               href="{{ url_for('catalog', category='Мячи') }}">
+
+                <div class="category-number">
+                    03
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Мячи
+                    </h3>
+
+                    <p>
+                        Тренировочные и профессиональные
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+            <a class="category-card"
+               href="{{ url_for('catalog', category='Вратарская экипировка') }}">
+
+                <div class="category-number">
+                    04
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Вратарская экипировка
+                    </h3>
+
+                    <p>
+                        Перчатки, форма и защита
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+            <a class="category-card"
+               href="{{ url_for('catalog', category='Аксессуары') }}">
+
+                <div class="category-number">
+                    05
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Аксессуары
+                    </h3>
+
+                    <p>
+                        Сумки, носки, щитки и другое
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+            <a class="category-card category-card-accent"
+               href="{{ url_for('catalog') }}">
+
+                <div class="category-number">
+                    06
+                </div>
+
+                <div class="category-content">
+
+                    <h3>
+                        Новинки
+                    </h3>
+
+                    <p>
+                        Последние поступления ProGoal
+                    </p>
+
+                </div>
+
+                <span class="category-arrow">
+                    ↗
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+
+    </div>
+
+    <p>
+        © 2026 ProGoal. Всё для твоей игры.
+    </p>
+
+</footer>
+
+
+</body>
+</html>

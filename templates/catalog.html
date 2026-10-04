@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Каталог — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+        <div class="brand-mark">
+            <span>P</span>
+            <span>G</span>
+        </div>
+
+        <div class="brand-text">
+            <strong>PROGOAL</strong>
+            <small>PLAY BEYOND</small>
+        </div>
+    </a>
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}" class="active">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}" class="nav-cart">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="catalog-page">
+
+    <!-- INTRO -->
+
+    <section class="catalog-intro">
+
+        <div class="catalog-intro-top">
+            <span>PROGOAL / 01</span>
+            <span>FOOTBALL EQUIPMENT</span>
+        </div>
+
+        <div class="catalog-heading">
+
+            <div>
+                <span class="catalog-kicker">
+                    Коллекция ProGoal
+                </span>
+
+                <h1>
+                    КАТАЛОГ
+                </h1>
+            </div>
+
+            <p>
+                Всё необходимое для твоей игры —
+                от тренировок до большого матча.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FILTERS -->
+
+    <section class="catalog-filters">
+
+        <div class="catalog-filters-label">
+            ФИЛЬТРЫ
+        </div>
+
+        <div class="catalog-filter-list">
+
+            <a href="{{ url_for('catalog') }}"
+               class="catalog-filter
+               {% if not selected_category %}active{% endif %}">
+                Все товары
+            </a>
+
+            <a href="{{ url_for('catalog', category='Футбольная форма') }}"
+               class="catalog-filter
+               {% if selected_category == 'Футбольная форма' %}active{% endif %}">
+                Форма
+            </a>
+
+            <a href="{{ url_for('catalog', category='Бутсы') }}"
+               class="catalog-filter
+               {% if selected_category == 'Бутсы' %}active{% endif %}">
+                Бутсы
+            </a>
+
+            <a href="{{ url_for('catalog', category='Мячи') }}"
+               class="catalog-filter
+               {% if selected_category == 'Мячи' %}active{% endif %}">
+                Мячи
+            </a>
+
+            <a href="{{ url_for('catalog', category='Вратарская экипировка') }}"
+               class="catalog-filter
+               {% if selected_category == 'Вратарская экипировка' %}active{% endif %}">
+                Вратарская экипировка
+            </a>
+
+            <a href="{{ url_for('catalog', category='Аксессуары') }}"
+               class="catalog-filter
+               {% if selected_category == 'Аксессуары' %}active{% endif %}">
+                Аксессуары
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+
+    <section class="catalog-products">
+
+        <div class="catalog-products-header">
+
+            <span>
+                ТОВАРЫ
+            </span>
+
+            <span>
+                {{ products|length }} ПОЗИЦИЙ
+            </span>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="catalog-product-grid">
+
+            {% for product in products %}
+
+            <article class="catalog-product-card"
+                     onclick="window.location.href='{{ url_for('product', product_id=product.id) }}'">
+
+                <!-- PRODUCT VISUAL -->
+
+                <div class="catalog-product-visual">
+
+                    <span class="catalog-product-number">
+                        {{ "%02d"|format(loop.index) }}
+                    </span>
+
+                    <span class="catalog-product-mark">
+                        PG
+                    </span>
+
+                    <span class="catalog-product-arrow">
+                        ↗
+                    </span>
+
+                </div>
+
+
+                <!-- PRODUCT INFO -->
+
+                <div class="catalog-product-info">
+
+                    <div class="catalog-product-meta">
+
+                        <span class="catalog-product-category">
+                            {{ product.category }}
+                        </span>
+
+                        <span class="catalog-product-brand">
+                            {{ product.brand }}
+                        </span>
+
+                    </div>
+
+
+                    <h2>
+                        {{ product.name }}
+                    </h2>
+
+
+                    <p class="catalog-product-description">
+                        {{ product.description }}
+                    </p>
+
+
+                    <div class="catalog-product-bottom">
+
+                        <span class="catalog-product-price">
+                            {{ product.price }} ₽
+                        </span>
+
+
+                        <form method="POST"
+                              action="{{ url_for('add_to_cart', product_id=product.id) }}"
+                              onclick="event.stopPropagation()">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   value="{{ csrf_token() }}">
+
+                            <button type="submit"
+                                    class="catalog-cart-button">
+                                В корзину
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="catalog-empty">
+
+            <span>01</span>
+
+            <h2>
+                ТОВАРЫ НЕ НАЙДЕНЫ
+            </h2>
+
+            <p>
+                В этой категории пока нет доступных товаров.
+            </p>
+
+            <a href="{{ url_for('catalog') }}">
+                Вернуться ко всем товарам →
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            PROGOAL
+        </div>
+
+        <div class="footer-text">
+            Всё для твоей игры.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 ProGoal
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>

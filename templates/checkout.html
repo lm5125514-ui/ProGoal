@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Оформление заказа — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <div class="brand-mark">
+            <span>P</span>
+            <span>G</span>
+        </div>
+
+        <div class="brand-text">
+            <strong>PROGOAL</strong>
+            <small>PLAY BEYOND</small>
+        </div>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="checkout-page-new">
+
+
+    <!-- PAGE HEADER -->
+
+    <section class="checkout-heading-new">
+
+        <div class="checkout-heading-top">
+
+            <span>
+                PROGOAL / CHECKOUT
+            </span>
+
+            <span>
+                ORDER 01
+            </span>
+
+        </div>
+
+
+        <div class="checkout-heading-content">
+
+            <div>
+
+                <span class="checkout-kicker">
+                    Последний шаг
+                </span>
+
+                <h1>
+                    ОФОРМЛЕНИЕ
+                </h1>
+
+            </div>
+
+            <p>
+                Заполни данные доставки,
+                чтобы завершить заказ.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    {% if error %}
+
+    <div class="checkout-error-new">
+
+        <span>!</span>
+
+        <div>
+            {{ error }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- MAIN CONTENT -->
+
+    <section class="checkout-content-new">
+
+
+        <!-- CUSTOMER FORM -->
+
+        <div class="checkout-form-new">
+
+            <div class="checkout-section-number">
+                01
+            </div>
+
+
+            <div class="checkout-section-heading">
+
+                <span>
+                    CUSTOMER
+                </span>
+
+                <h2>
+                    ДАННЫЕ ПОКУПАТЕЛЯ
+                </h2>
+
+            </div>
+
+
+            <form method="POST"
+                  action="{{ url_for('checkout') }}">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <div class="checkout-form-grid">
+
+
+                    <!-- NAME -->
+
+                    <div class="checkout-field checkout-field-full">
+
+                        <label for="name">
+                            ИМЯ
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Введите ваше имя"
+                            value="{{ request.form.get('name', '') }}"
+                            maxlength="100"
+                            autocomplete="name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="checkout-field">
+
+                        <label for="phone">
+                            ТЕЛЕФОН
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="+7 (999) 123-45-67"
+                            value="{{ request.form.get('phone', '') }}"
+                            maxlength="30"
+                            autocomplete="tel"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="checkout-field checkout-field-full">
+
+                        <label for="address">
+                            АДРЕС ДОСТАВКИ
+                        </label>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            rows="4"
+                            maxlength="255"
+                            placeholder="Город, улица, дом, квартира"
+                            autocomplete="street-address"
+                            required
+                        >{{ request.form.get('address', '') }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkout-form-bottom">
+
+                    <span>
+                        Нажимая кнопку, ты подтверждаешь
+                        правильность указанных данных.
+                    </span>
+
+                    <button
+                        type="submit"
+                        class="checkout-submit-new">
+
+                        <span>
+                            ПОДТВЕРДИТЬ ЗАКАЗ
+                        </span>
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="checkout-order-new">
+
+            <div class="checkout-section-number">
+                02
+            </div>
+
+
+            <div class="checkout-section-heading">
+
+                <span>
+                    YOUR ORDER
+                </span>
+
+                <h2>
+                    ТВОЙ ЗАКАЗ
+                </h2>
+
+            </div>
+
+
+            <div class="checkout-products-new">
+
+                {% for item in products %}
+
+                <div class="checkout-product-new">
+
+
+                    <div class="checkout-product-visual">
+
+                        <span>
+                            PG
+                        </span>
+
+                    </div>
+
+
+                    <div class="checkout-product-info">
+
+                        <strong>
+                            {{ item.product.name }}
+                        </strong>
+
+                        <span>
+                            {{ item.product.brand }}
+                            · {{ item.quantity }} шт.
+                        </span>
+
+                    </div>
+
+
+                    <strong class="checkout-product-price">
+                        {{ item.item_total }} ₽
+                    </strong>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="checkout-summary-divider"></div>
+
+
+            <div class="checkout-summary-row">
+
+                <span>
+                    Товары
+                </span>
+
+                <strong>
+                    {{ total }} ₽
+                </strong>
+
+            </div>
+
+
+            <div class="checkout-summary-row">
+
+                <span>
+                    Доставка
+                </span>
+
+                <span class="checkout-free">
+                    БЕСПЛАТНО
+                </span>
+
+            </div>
+
+
+            <div class="checkout-summary-total">
+
+                <span>
+                    ИТОГО
+                </span>
+
+                <strong>
+                    {{ total }} ₽
+                </strong>
+
+            </div>
+
+
+            <a href="{{ url_for('cart') }}"
+               class="checkout-back">
+
+                ← Вернуться в корзину
+
+            </a>
+
+        </aside>
+
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            PROGOAL
+        </div>
+
+        <div class="footer-text">
+            Всё для твоей игры.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 ProGoal
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

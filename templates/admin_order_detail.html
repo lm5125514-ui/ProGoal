@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Заказ #{{ order.id }} — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="admin-detail-body">
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+            </svg>
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}">
+            Заказы
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}">
+            Выйти
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="admin-detail-page">
+
+    <!-- TOP LINE -->
+
+    <div class="admin-detail-top-line">
+
+        <a href="{{ url_for('admin_orders') }}">
+            ← ВСЕ ЗАКАЗЫ
+        </a>
+
+        <span>
+            PROGOAL / ORDER / {{ "%04d"|format(order.id) }}
+        </span>
+
+    </div>
+
+
+    <!-- HEADING -->
+
+    <section class="admin-detail-heading">
+
+        <div>
+
+            <span class="admin-detail-kicker">
+                ORDER
+            </span>
+
+            <h1>
+                #{{ order.id }}
+            </h1>
+
+        </div>
+
+
+        <div class="admin-detail-status">
+
+    <span>
+        СТАТУС ЗАКАЗА
+    </span>
+
+    <form
+        method="POST"
+        action="{{ url_for('update_order_status', order_id=order.id) }}"
+        class="admin-status-form"
+    >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+        >
+
+        <select
+            name="status"
+            class="admin-status-select"
+            onchange="this.form.submit()"
+        >
+
+            <option value="Новый"
+                    {% if order.status == "Новый" %}selected{% endif %}>
+                Новый
+            </option>
+
+            <option value="В обработке"
+                    {% if order.status == "В обработке" %}selected{% endif %}>
+                В обработке
+            </option>
+
+            <option value="Собран"
+                    {% if order.status == "Собран" %}selected{% endif %}>
+                Собран
+            </option>
+
+            <option value="Отправлен"
+                    {% if order.status == "Отправлен" %}selected{% endif %}>
+                Отправлен
+            </option>
+
+            <option value="Выполнен"
+                    {% if order.status == "Выполнен" %}selected{% endif %}>
+                Выполнен
+            </option>
+
+        </select>
+
+    </form>
+
+</div>
+
+    </section>
+
+
+    <!-- CLIENT -->
+
+    <section class="admin-detail-section">
+
+        <div class="admin-detail-section-title">
+
+            <span>
+                01
+            </span>
+
+            <h2>
+                ДАННЫЕ КЛИЕНТА
+            </h2>
+
+        </div>
+
+
+        <div class="admin-detail-customer-grid">
+
+            <div class="admin-detail-info">
+
+                <span>
+                    ИМЯ
+                </span>
+
+                <strong>
+                    {{ order.customer_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="admin-detail-info">
+
+                <span>
+                    ТЕЛЕФОН
+                </span>
+
+                <strong>
+                    {{ order.customer_phone }}
+                </strong>
+
+            </div>
+
+
+            <div class="admin-detail-info admin-detail-info-wide">
+
+                <span>
+                    АДРЕС ДОСТАВКИ
+                </span>
+
+                <strong>
+                    {{ order.customer_address }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+
+    <section class="admin-detail-section">
+
+        <div class="admin-detail-section-title">
+
+            <span>
+                02
+            </span>
+
+            <h2>
+                СОСТАВ ЗАКАЗА
+            </h2>
+
+        </div>
+
+
+        {% if products %}
+
+            <div class="admin-detail-products">
+
+                {% for item in products %}
+
+                    <div class="admin-detail-product">
+
+                        <div class="admin-detail-product-number">
+                            {{ "%02d"|format(loop.index) }}
+                        </div>
+
+
+                        <div class="admin-detail-product-main">
+
+                            <span>
+                                {{ item.product.category }}
+                            </span>
+
+                            <h3>
+                                {{ item.product.name }}
+                            </h3>
+
+                            <small>
+                                {{ item.product.brand }}
+                            </small>
+
+                        </div>
+
+
+                        <div class="admin-detail-product-quantity">
+
+                            <span>
+                                КОЛИЧЕСТВО
+                            </span>
+
+                            <strong>
+                                {{ item.quantity }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="admin-detail-product-price">
+
+                            <span>
+                                СТОИМОСТЬ
+                            </span>
+
+                            <strong>
+                                {{ item.item_total }} ₽
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="admin-detail-empty-products">
+
+                <span>
+                    NO PRODUCTS
+                </span>
+
+                <p>
+                    Информация о товарах отсутствует.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- TOTAL -->
+
+    <section class="admin-detail-total">
+
+        <div>
+
+            <span>
+                ORDER TOTAL
+            </span>
+
+            <h2>
+                ИТОГО
+            </h2>
+
+        </div>
+
+
+        <strong>
+            {{ order.total }} ₽
+        </strong>
+
+    </section>
+
+
+    <!-- BACK -->
+
+    <div class="admin-detail-back">
+
+        <a href="{{ url_for('admin_orders') }}">
+            ← ВЕРНУТЬСЯ К ЗАКАЗАМ
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+
+    </div>
+
+    <p>
+        © 2026 ProGoal. Панель управления.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

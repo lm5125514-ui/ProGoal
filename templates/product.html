@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product.name }} — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <div class="brand-mark">
+            <span>P</span>
+            <span>G</span>
+        </div>
+
+        <div class="brand-text">
+            <strong>PROGOAL</strong>
+            <small>PLAY BEYOND</small>
+        </div>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}" class="nav-cart">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="product-page-new">
+
+    <!-- TOP LINE -->
+
+    <div class="product-top-line">
+
+        <a href="{{ url_for('catalog') }}" class="product-back">
+            ← Каталог
+        </a>
+
+        <span>
+            PROGOAL / PRODUCT
+        </span>
+
+    </div>
+
+
+    <!-- PRODUCT -->
+
+    <section class="product-showcase">
+
+
+        <!-- VISUAL -->
+
+        <div class="product-visual-large">
+
+            <span class="product-visual-number">
+                PRODUCT
+            </span>
+
+            <span class="product-visual-code">
+                PG
+            </span>
+
+            <span class="product-visual-arrow">
+                ↗
+            </span>
+
+            <div class="product-visual-logo">
+                PG
+            </div>
+
+        </div>
+
+
+        <!-- INFO -->
+
+        <div class="product-information">
+
+            <div class="product-category-new">
+                {{ product.category }}
+            </div>
+
+
+            <h1>
+                {{ product.name }}
+            </h1>
+
+
+            <div class="product-brand-new">
+                БРЕНД
+                <strong>{{ product.brand }}</strong>
+            </div>
+
+
+            <div class="product-description-new">
+                {{ product.description }}
+            </div>
+
+
+            <div class="product-divider"></div>
+
+
+            <div class="product-price-new">
+                {{ product.price }} ₽
+            </div>
+
+
+            <!-- SIZE -->
+
+            <div class="product-size-block">
+
+                <div class="product-size-header">
+
+                    <span>
+                        РАЗМЕР
+                    </span>
+
+                    <span>
+                        Выберите размер
+                    </span>
+
+                </div>
+
+
+                <div class="product-sizes">
+
+                    <button type="button"
+                            class="product-size">
+                        S
+                    </button>
+
+                    <button type="button"
+                            class="product-size">
+                        M
+                    </button>
+
+                    <button type="button"
+                            class="product-size">
+                        L
+                    </button>
+
+                    <button type="button"
+                            class="product-size">
+                        XL
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADD TO CART -->
+
+            <form method="POST"
+                  action="{{ url_for('add_to_cart', product_id=product.id) }}">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <button type="submit"
+                        class="product-add-button">
+
+                    <span>
+                        Добавить в корзину
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <div class="product-note">
+                Быстрое оформление заказа · Безопасная покупка
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- INFO ROW -->
+
+    <section class="product-features">
+
+        <div class="product-feature">
+
+            <span>01</span>
+
+            <strong>
+                КАЧЕСТВО
+            </strong>
+
+            <p>
+                Экипировка для тренировок
+                и матчей.
+            </p>
+
+        </div>
+
+
+        <div class="product-feature">
+
+            <span>02</span>
+
+            <strong>
+                PROGOAL
+            </strong>
+
+            <p>
+                Всё необходимое
+                для твоей игры.
+            </p>
+
+        </div>
+
+
+        <div class="product-feature">
+
+            <span>03</span>
+
+            <strong>
+                PLAY BEYOND
+            </strong>
+
+            <p>
+                Играй больше.
+                Играй лучше.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            PROGOAL
+        </div>
+
+        <div class="footer-text">
+            Всё для твоей игры.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 ProGoal
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>

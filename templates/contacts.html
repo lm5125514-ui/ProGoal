@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Контакты — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+            </svg>
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}"
+           class="nav-cart">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="contacts-page-new">
+
+        <div class="contacts-top-line">
+
+            <span>
+                PROGOAL / 05
+            </span>
+
+            <span>
+                CONTACTS
+            </span>
+
+        </div>
+
+
+        <div class="contacts-heading">
+
+            <div>
+
+                <span class="contacts-kicker">
+                    PROGOAL SUPPORT
+                </span>
+
+                <h1>
+                    КОНТАКТЫ
+                </h1>
+
+            </div>
+
+            <p>
+                Остались вопросы?
+                Свяжитесь с нами —
+                поможем подобрать экипировку
+                и оформить заказ.
+            </p>
+
+        </div>
+
+
+        <div class="contacts-grid-new">
+
+
+            <div class="contact-card-new">
+
+                <div class="contact-card-number">
+                    01
+                </div>
+
+                <div class="contact-card-icon">
+                    TEL
+                </div>
+
+                <div class="contact-card-content">
+
+                    <span>
+                        ТЕЛЕФОН
+                    </span>
+
+                    <h2>
+                        +7 (900) 123-45-67
+                    </h2>
+
+                    <p>
+                        Свяжитесь с нами по любым
+                        вопросам о товарах и заказах.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-new">
+
+                <div class="contact-card-number">
+                    02
+                </div>
+
+                <div class="contact-card-icon">
+                    @
+                </div>
+
+                <div class="contact-card-content">
+
+                    <span>
+                        EMAIL
+                    </span>
+
+                    <h2>
+                        info@progoal.ru
+                    </h2>
+
+                    <p>
+                        Напишите нам, если вам нужна
+                        дополнительная информация.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-new">
+
+                <div class="contact-card-number">
+                    03
+                </div>
+
+                <div class="contact-card-icon">
+                    GPS
+                </div>
+
+                <div class="contact-card-content">
+
+                    <span>
+                        АДРЕС
+                    </span>
+
+                    <h2>
+                        Калининград
+                    </h2>
+
+                    <p>
+                        ул. Спортивная, 10
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-new">
+
+                <div class="contact-card-number">
+                    04
+                </div>
+
+                <div class="contact-card-icon">
+                    TIME
+                </div>
+
+                <div class="contact-card-content">
+
+                    <span>
+                        ВРЕМЯ РАБОТЫ
+                    </span>
+
+                    <h2>
+                        09:00 — 20:00
+                    </h2>
+
+                    <p>
+                        Пн–Пт: 09:00–20:00<br>
+                        Сб–Вс: 10:00–18:00
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="contacts-bottom">
+
+            <div class="contacts-bottom-text">
+
+                <span>
+                    NEED EQUIPMENT?
+                </span>
+
+                <h2>
+                    Готов к игре?
+                </h2>
+
+            </div>
+
+            <a href="{{ url_for('catalog') }}"
+               class="contacts-catalog-button">
+
+                <span>
+                    Перейти в каталог
+                </span>
+
+                <span>
+                    ↗
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+    </div>
+
+    <p>
+        © 2026 ProGoal. Всё для твоей игры.
+    </p>
+
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Заказ оформлен — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        PROGOAL
+    </div>
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('cart') }}">
+            🛒 Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="order-success-page">
+
+    <div class="order-success-card">
+
+        <div class="order-success-icon">
+            ✓
+        </div>
+
+
+        <h1>
+            Заказ успешно оформлен!
+        </h1>
+
+
+        <p class="order-success-text">
+            Спасибо за заказ в ProGoal.
+        </p>
+
+
+        <div class="order-number">
+
+            Номер заказа:
+
+            <strong>
+                #{{ order.id }}
+            </strong>
+
+        </div>
+
+
+        <div class="order-info">
+
+            <div>
+                <span>
+                    Получатель
+                </span>
+
+                <strong>
+                    {{ order.customer_name }}
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Телефон
+                </span>
+
+                <strong>
+                    {{ order.customer_phone }}
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Адрес доставки
+                </span>
+
+                <strong>
+                    {{ order.customer_address }}
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Сумма заказа
+                </span>
+
+                <strong>
+                    {{ order.total }} ₽
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Статус
+                </span>
+
+                <strong>
+                    {{ order.status }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <a href="{{ url_for('catalog') }}"
+           class="success-button">
+
+            Вернуться в каталог
+
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    <p>
+        © 2026 ProGoal. Всё для твоей игры.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

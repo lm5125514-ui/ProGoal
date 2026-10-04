@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ProGoal — Вход в админ-панель</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body class="admin-login-body">
+
+    <main class="admin-login-page">
+
+        <div class="admin-login-top">
+            <span>PROGOAL / 06</span>
+            <span>ADMIN ACCESS</span>
+        </div>
+
+        <div class="admin-login-wrapper">
+
+            <div class="admin-login-brand">
+
+                <div class="admin-login-logo">
+                    <svg
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M20 20H55C69 20 78 28 78 40C78 52 69 60 55 60H38V80H20V20Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="8"
+                        />
+
+                        <path
+                            d="M38 35H54C58 35 61 37 61 40C61 43 58 45 54 45H38V35Z"
+                            fill="currentColor"
+                        />
+
+                        <path
+                            d="M55 60L78 80"
+                            stroke="currentColor"
+                            stroke-width="8"
+                        />
+                    </svg>
+                </div>
+
+                <div class="admin-login-brand-name">
+                    PROGOAL
+                </div>
+
+                <div class="admin-login-brand-subtitle">
+                    PLAY BEYOND
+                </div>
+
+            </div>
+
+
+            <div class="admin-login-card">
+
+                <div class="admin-login-kicker">
+                    SECURE AREA
+                </div>
+
+                <h1>
+                    ВХОД
+                </h1>
+
+                <p class="admin-login-description">
+                    Доступ к панели управления магазином
+                </p>
+
+
+                {% if error %}
+                    <div class="admin-login-error">
+                        <span>!</span>
+                        <p>{{ error }}</p>
+                    </div>
+                {% endif %}
+
+
+                <form
+                    method="POST"
+                    class="admin-login-form"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <label>
+                        <span>ЛОГИН</span>
+
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Введите логин"
+                            autocomplete="username"
+                            required
+                        >
+                    </label>
+
+
+                    <label>
+                        <span>ПАРОЛЬ</span>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Введите пароль"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </label>
+
+
+                    <button
+                        type="submit"
+                        class="admin-login-button"
+                    >
+                        ВОЙТИ
+                        <span>↗</span>
+                    </button>
+
+                </form>
+
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="admin-login-back"
+                >
+                    ← Вернуться на сайт
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-login-footer">
+            <span>PROGOAL ADMINISTRATION</span>
+            <span>AUTHORIZED ACCESS ONLY</span>
+        </div>
+
+    </main>
+
+</body>
+</html>
