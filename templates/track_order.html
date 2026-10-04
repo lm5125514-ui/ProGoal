@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Отслеживание заказа — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <div class="brand-mark">
+            <span>P</span>
+            <span>G</span>
+        </div>
+
+        <div class="brand-text">
+            <strong>PROGOAL</strong>
+            <small>PLAY BEYOND</small>
+        </div>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('catalog', category='Футбольная форма') }}">
+            Форма
+        </a>
+
+        <a href="{{ url_for('catalog', category='Бутсы') }}">
+            Бутсы
+        </a>
+
+        <a href="{{ url_for('catalog', category='Мячи') }}">
+            Мячи
+        </a>
+
+        <a href="{{ url_for('contacts') }}">
+            Контакты
+        </a>
+
+        <a href="{{ url_for('track_order') }}"
+           class="active">
+            Отследить заказ
+        </a>
+
+        <a href="{{ url_for('cart') }}"
+           class="nav-cart">
+            Корзина
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="track-page">
+
+    <!-- INTRO -->
+
+    <section class="track-intro">
+
+        <div class="track-intro-top">
+
+            <span>
+                PROGOAL / 02
+            </span>
+
+            <span>
+                ORDER TRACKING
+            </span>
+
+        </div>
+
+
+        <div class="track-heading">
+
+            <div>
+
+                <span class="track-kicker">
+                    Доставка ProGoal
+                </span>
+
+                <h1>
+                    ОТСЛЕЖИВАНИЕ<br>
+                    ЗАКАЗА
+                </h1>
+
+            </div>
+
+
+            <p>
+                Узнай статус своего заказа,
+                введя номер заказа и телефон,
+                указанный при оформлении.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="track-search">
+
+        <div class="track-search-label">
+            ПРОВЕРКА ЗАКАЗА
+        </div>
+
+
+        <form method="POST"
+              class="track-form">
+
+            <input type="hidden"
+                   name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+
+            <div class="track-field">
+
+                <label for="order_id">
+                    НОМЕР ЗАКАЗА
+                </label>
+
+                <input
+                    type="text"
+                    id="order_id"
+                    name="order_id"
+                    placeholder="Например: 15"
+                    value="{{ request.form.get('order_id', '') }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="track-field">
+
+                <label for="phone">
+                    ТЕЛЕФОН
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="+7 900 000-00-00"
+                    value="{{ request.form.get('phone', '') }}"
+                    required
+                >
+
+            </div>
+
+
+            <button type="submit"
+                    class="track-submit">
+
+                <span>
+                    НАЙТИ ЗАКАЗ
+                </span>
+
+                <strong>
+                    →
+                </strong>
+
+            </button>
+
+        </form>
+
+
+        {% if error %}
+
+        <div class="track-error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- RESULT -->
+
+    {% if order %}
+
+    <section class="track-result">
+
+        <div class="track-result-top">
+
+            <div>
+
+                <span>
+                    ЗАКАЗ
+                </span>
+
+                <strong>
+                    #{{ order.id }}
+                </strong>
+
+            </div>
+
+
+            <div class="track-status">
+                {{ order.status }}
+            </div>
+
+        </div>
+
+
+        <!-- ORDER INFO -->
+
+        <div class="track-info">
+
+            <div>
+
+                <span>
+                    ПОЛУЧАТЕЛЬ
+                </span>
+
+                <strong>
+                    {{ order.customer_name }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ТЕЛЕФОН
+                </span>
+
+                <strong>
+                    {{ order.customer_phone }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    АДРЕС
+                </span>
+
+                <strong>
+                    {{ order.customer_address }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    СУММА
+                </span>
+
+                <strong>
+                    {{ order.total }} ₽
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="track-progress">
+
+            <div class="track-step
+                {% if order.status in ['Новый', 'В обработке', 'Собран', 'Отправлен', 'Выполнен'] %}
+                active
+                {% endif %}">
+
+                <span>
+                    01
+                </span>
+
+                <strong>
+                    НОВЫЙ
+                </strong>
+
+            </div>
+
+
+            <div class="track-line"></div>
+
+
+            <div class="track-step
+                {% if order.status in ['В обработке', 'Собран', 'Отправлен', 'Выполнен'] %}
+                active
+                {% endif %}">
+
+                <span>
+                    02
+                </span>
+
+                <strong>
+                    ОБРАБОТКА
+                </strong>
+
+            </div>
+
+
+            <div class="track-line"></div>
+
+
+            <div class="track-step
+                {% if order.status in ['Собран', 'Отправлен', 'Выполнен'] %}
+                active
+                {% endif %}">
+
+                <span>
+                    03
+                </span>
+
+                <strong>
+                    СОБРАН
+                </strong>
+
+            </div>
+
+
+            <div class="track-line"></div>
+
+
+            <div class="track-step
+                {% if order.status in ['Отправлен', 'Выполнен'] %}
+                active
+                {% endif %}">
+
+                <span>
+                    04
+                </span>
+
+                <strong>
+                    ОТПРАВЛЕН
+                </strong>
+
+            </div>
+
+
+            <div class="track-line"></div>
+
+
+            <div class="track-step
+                {% if order.status == 'Выполнен' %}
+                active
+                {% endif %}">
+
+                <span>
+                    05
+                </span>
+
+                <strong>
+                    ВЫПОЛНЕН
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            PROGOAL
+        </div>
+
+        <div class="footer-text">
+            Всё для твоей игры.
+        </div>
+
+        <div class="footer-copy">
+            © 2026 ProGoal
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>

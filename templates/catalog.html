@@ -143,6 +143,36 @@
 
         </div>
 
+        <div class="catalog-brand-filter">
+
+            <span class="catalog-brand-label">
+                БРЕНД
+            </span>
+
+            <div class="catalog-brand-list">
+
+                <a href="{{ url_for('catalog', category=selected_category) }}"
+                   class="catalog-brand
+                   {% if not selected_brand %}active{% endif %}">
+                    Все бренды
+                </a>
+
+                {% for brand in brands %}
+
+                <a href="{{ url_for('catalog',
+                            category=selected_category,
+                            brand=brand) }}"
+                   class="catalog-brand
+                   {% if selected_brand == brand %}active{% endif %}">
+                    {{ brand }}
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
     </section>
 
 
@@ -174,7 +204,19 @@
 
                 <!-- PRODUCT VISUAL -->
 
+
                 <div class="catalog-product-visual">
+
+                    {% set main_image = product.images | selectattr("is_main", "equalto", true) | first %}
+
+                    {% if main_image %}
+                        <img
+                                class="catalog-product-image"
+                                src="{{ url_for('static', filename='images/products/' ~ main_image.filename) }}"
+                                alt="{{ product.name }}"
+                                onload="setProductImageRatio(this)"
+                        >
+                    {% endif %}
 
                     <span class="catalog-product-number">
                         {{ "%02d"|format(loop.index) }}
@@ -297,6 +339,18 @@
 
 </footer>
 
+<script>
+    function setProductImageRatio(image) {
+        const visual = image.closest(".catalog-product-visual");
+
+        if (!visual) {
+            return;
+        }
+
+        visual.style.aspectRatio =
+            `${image.naturalWidth} / ${image.naturalHeight}`;
+    }
+</script>
 
 </body>
 </html>

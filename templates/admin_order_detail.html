@@ -56,25 +56,7 @@
     </a>
 
 
-    <nav class="nav">
-
-        <a href="{{ url_for('home') }}">
-            Главная
-        </a>
-
-        <a href="{{ url_for('catalog') }}">
-            Каталог
-        </a>
-
-        <a href="{{ url_for('admin_orders') }}">
-            Заказы
-        </a>
-
-        <a href="{{ url_for('admin_logout') }}">
-            Выйти
-        </a>
-
-    </nav>
+    {% include "admin_nav.html" %}
 
 </header>
 

@@ -58,29 +58,7 @@
     </a>
 
 
-    <nav class="nav">
-
-        <a href="{{ url_for('home') }}">
-            Главная
-        </a>
-
-        <a href="{{ url_for('catalog') }}">
-            Каталог
-        </a>
-
-        <a href="{{ url_for('admin_orders') }}">
-            Заказы
-        </a>
-
-        <a href="{{ url_for('admin_products') }}">
-            Товары
-        </a>
-
-        <a href="{{ url_for('admin_logout') }}">
-            Выйти
-        </a>
-
-    </nav>
+    {% include "admin_nav.html" %}
 
 </header>
 
@@ -127,7 +105,8 @@
 
 
     <form method="POST"
-          class="admin-product-form">
+      class="admin-product-form"
+      enctype="multipart/form-data">
 
         <input type="hidden"
                name="csrf_token"
@@ -274,28 +253,25 @@
 
 
         <div class="admin-form-section">
-
             <span class="admin-form-section-title">
                 ИЗОБРАЖЕНИЕ
             </span>
 
-
             <div class="admin-form-field">
 
                 <label for="image">
-                    ПУТЬ К ИЗОБРАЖЕНИЮ
+                    ИЗОБРАЖЕНИЕ ТОВАРА
                 </label>
 
                 <input
-                    type="text"
-                    id="image"
-                    name="image"
-                    value="{{ form.get('image', '') }}"
-                    placeholder="images/product.jpg"
-                    maxlength="255">
+                        type="file"
+                        name="images"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        multiple
+                >
 
                 <small>
-                    Можно оставить пустым — изображение добавим позже.
+                    JPG, JPEG, PNG или WEBP. Максимальный размер — 5 МБ.
                 </small>
 
             </div>

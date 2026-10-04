@@ -89,23 +89,46 @@
 
         <!-- VISUAL -->
 
-        <div class="product-visual-large">
+        <div class="product-gallery">
 
-            <span class="product-visual-number">
-                PRODUCT
-            </span>
+            <div class="product-visual-large">
 
-            <span class="product-visual-code">
-                PG
-            </span>
+                {% if images %}
+                     <img
+                             id="main-product-image"
+                             src="{{ url_for('static', filename='images/products/' ~ images[0].filename) }}"
+                             alt="{{ product.name }}"
+                     >
+                {% else %}
+                     <div class="product-visual-logo">
+                         PG
+                     </div>
+                {% endif %}
 
-            <span class="product-visual-arrow">
-                ↗
-            </span>
-
-            <div class="product-visual-logo">
-                PG
             </div>
+
+            {% if images|length > 1 %}
+
+                <div class="product-thumbnails">
+
+                    {% for image in images %}
+                        <button
+                                type="button"
+                                class="product-thumbnail {% if loop.first %}active{% endif %}"
+                                onclick="changeProductImage(
+                                    '{{ url_for('static', filename='images/products/' ~ image.filename) }}',
+                                    this
+                                )"
+                        >
+                                <img
+                                        src="{{ url_for('static', filename='images/products/' ~ image.filename) }}"
+                                        alt="{{ product.name }}"
+                                >
+                        </button>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
 
         </div>
 
@@ -297,6 +320,25 @@
 
 </footer>
 
+<script>
+    function changeProductImage(imageUrl, thumbnail) {
+        const mainImage = document.getElementById("main-product-image");
+
+        if (!mainImage) {
+            return;
+        }
+
+        mainImage.src = imageUrl;
+
+        document
+            .querySelectorAll(".product-thumbnail")
+            .forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+        thumbnail.classList.add("active");
+    }
+</script>
 
 </body>
 </html>

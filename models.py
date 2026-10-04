@@ -16,8 +16,35 @@ class Product(db.Model):
 
     image = db.Column(db.String(255), nullable=True)
 
+    images = db.relationship(
+        "ProductImage",
+        backref="product",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Product {self.name}>"
+
+class ProductImage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id"),
+        nullable=False
+    )
+
+    filename = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    is_main = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)

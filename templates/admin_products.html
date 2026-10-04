@@ -58,29 +58,7 @@
     </a>
 
 
-    <nav class="nav">
-
-        <a href="{{ url_for('home') }}">
-            Главная
-        </a>
-
-        <a href="{{ url_for('catalog') }}">
-            Каталог
-        </a>
-
-        <a href="{{ url_for('admin_orders') }}">
-            Заказы
-        </a>
-
-        <a href="{{ url_for('admin_products') }}">
-            Товары
-        </a>
-
-        <a href="{{ url_for('admin_logout') }}">
-            Выйти
-        </a>
-
-    </nav>
+    {% include "admin_nav.html" %}
 
 </header>
 
@@ -103,17 +81,20 @@
 
     <div class="admin-heading">
 
-        <div>
+    <div>
 
-            <span class="admin-kicker">
-                CONTROL PANEL
-            </span>
+        <span class="admin-kicker">
+            CONTROL PANEL
+        </span>
 
-            <h1>
-                ТОВАРЫ
-            </h1>
+        <h1>
+            ТОВАРЫ
+        </h1>
 
-        </div>
+    </div>
+
+
+    <div class="admin-heading-actions">
 
         <div class="admin-heading-info">
 
@@ -127,7 +108,16 @@
 
         </div>
 
+
+        <a href="{{ url_for('admin_add_product') }}"
+           class="admin-heading-add">
+            ДОБАВИТЬ ТОВАР
+            <span>+</span>
+        </a>
+
     </div>
+
+</div>
 
 
     {% if products %}
@@ -153,7 +143,14 @@
 
                     <div class="admin-product-visual">
 
-                        {% if product.image %}
+                        {% set main_image = product.images | selectattr("is_main", "equalto", true) | first %}
+
+                        {% if main_image %}
+
+                            <img src="{{ url_for('static', filename='images/products/' ~ main_image.filename) }}"
+                                 alt="{{ product.name }}">
+
+                        {% elif product.image %}
 
                             <img src="{{ url_for('static', filename=product.image) }}"
                                  alt="{{ product.name }}">

@@ -14,12 +14,14 @@ from flask import (
 )
 
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
+import uuid
 from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from database import db
-from models import Product, Order, OrderItem, Admin
+from models import Product, ProductImage, Order, OrderItem, Admin
 
 
 app = Flask(__name__)
@@ -41,6 +43,29 @@ app.secret_key = secret_key
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///progoal.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+app.config["UPLOAD_FOLDER"] = os.path.join(
+    app.static_folder,
+    "images",
+    "products"
+)
+
+ALLOWED_IMAGE_EXTENSIONS = {
+    "jpg",
+    "jpeg",
+    "png",
+    "webp"
+}
+
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
+
+def allowed_image(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower()
+        in ALLOWED_IMAGE_EXTENSIONS
+    )
+
 # Безопасные настройки cookie сессии
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -57,6 +82,9 @@ limiter = Limiter(
 
 # Подключаем базу данных
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 
 # =========================
@@ -79,19 +107,40 @@ def contacts():
 @app.route("/catalog")
 def catalog():
 
-    category = request.args.get("category")
+    selected_category = request.args.get("category")
+    selected_brand = request.args.get("brand")
 
-    if category:
-        products = Product.query.filter_by(
-            category=category
+    query = Product.query
+
+    if selected_category:
+        query = query.filter_by(
+            category=selected_category
+        )
+
+    if selected_brand:
+        query = query.filter_by(
+            brand=selected_brand
+        )
+
+    products = query.order_by(
+        Product.id.desc()
+    ).all()
+
+    brands = [
+        row[0]
+        for row in db.session.query(
+            Product.brand
+        ).distinct().order_by(
+            Product.brand
         ).all()
-    else:
-        products = Product.query.all()
+    ]
 
     return render_template(
         "catalog.html",
         products=products,
-        selected_category=category
+        selected_category=selected_category,
+        selected_brand=selected_brand,
+        brands=brands
     )
 
 
@@ -104,11 +153,18 @@ def product(product_id):
 
     product = Product.query.get_or_404(product_id)
 
+    images = ProductImage.query.filter_by(
+        product_id=product.id
+    ).order_by(
+        ProductImage.is_main.desc(),
+        ProductImage.id.asc()
+    ).all()
+
     return render_template(
         "product.html",
-        product=product
+        product=product,
+        images=images
     )
-
 
 # =========================
 # ДОБАВЛЕНИЕ В КОРЗИНУ
@@ -354,6 +410,40 @@ def order_success(order_id):
         order=order
     )
 
+@app.route("/track-order", methods=["GET", "POST"])
+def track_order():
+
+    order = None
+    error = None
+
+    if request.method == "POST":
+
+        order_id = request.form.get("order_id", "").strip()
+        phone = request.form.get("phone", "").strip()
+
+        if not order_id or not phone:
+            error = "Введите номер заказа и телефон."
+
+        else:
+            try:
+                order_id = int(order_id)
+
+                order = Order.query.filter_by(
+                    id=order_id,
+                    customer_phone=phone
+                ).first()
+
+                if not order:
+                    error = "Заказ не найден. Проверьте номер заказа и телефон."
+
+            except ValueError:
+                error = "Номер заказа должен быть числом."
+
+    return render_template(
+        "track_order.html",
+        order=order,
+        error=error
+    )
 
 # =========================
 # ОБНОВЛЕНИЕ КОРЗИНЫ
@@ -616,7 +706,9 @@ def admin_add_product():
         brand = request.form.get("brand", "").strip()
         price = request.form.get("price", "").strip()
         description = request.form.get("description", "").strip()
-        image = request.form.get("image", "").strip()
+
+        # Получаем ВСЕ загруженные изображения
+        images = request.files.getlist("images")
 
         # Проверяем обязательные поля
         if not name or not category or not brand or not price or not description:
@@ -625,6 +717,26 @@ def admin_add_product():
                 error="Заполните все обязательные поля.",
                 form=request.form
             )
+
+        # Убираем пустые файлы
+        valid_images = [
+            image_file
+            for image_file in images
+            if image_file and image_file.filename
+        ]
+
+        # Проверяем расширения всех изображений
+        for image_file in valid_images:
+
+            if not allowed_image(image_file.filename):
+                return render_template(
+                    "admin_product_add.html",
+                    error=(
+                        "Разрешены только изображения "
+                        "JPG, JPEG, PNG и WEBP."
+                    ),
+                    form=request.form
+                )
 
         # Проверяем цену
         try:
@@ -647,10 +759,49 @@ def admin_add_product():
             brand=brand,
             price=price,
             description=description,
-            image=image or None
+            image=None
         )
 
         db.session.add(product)
+        db.session.flush()
+
+        # Сохраняем изображения
+        for index, image_file in enumerate(valid_images):
+
+            original_name = secure_filename(
+                image_file.filename
+            )
+
+            extension = original_name.rsplit(
+                ".",
+                1
+            )[1].lower()
+
+            filename = (
+                f"product_{uuid.uuid4().hex}.{extension}"
+            )
+
+            image_path = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+
+            image_file.save(image_path)
+
+            # Первое изображение становится главным
+            if index == 0:
+                product.image = (
+                    f"images/products/{filename}"
+                )
+
+            product_image = ProductImage(
+                product_id=product.id,
+                filename=filename,
+                is_main=(index == 0)
+            )
+
+            db.session.add(product_image)
+
         db.session.commit()
 
         return redirect(
@@ -685,7 +836,9 @@ def admin_edit_product(product_id):
         brand = request.form.get("brand", "").strip()
         price = request.form.get("price", "").strip()
         description = request.form.get("description", "").strip()
-        image = request.form.get("image", "").strip()
+
+        # Получаем все загруженные изображения
+        images = request.files.getlist("images")
 
         # Проверяем обязательные поля
         if not name or not category or not brand or not price or not description:
@@ -694,6 +847,26 @@ def admin_edit_product(product_id):
                 product=product,
                 error="Заполните все обязательные поля."
             )
+
+        # Убираем пустые файлы
+        valid_images = [
+            image_file
+            for image_file in images
+            if image_file and image_file.filename
+        ]
+
+        # Проверяем расширения всех изображений
+        for image_file in valid_images:
+
+            if not allowed_image(image_file.filename):
+                return render_template(
+                    "admin_product_edit.html",
+                    product=product,
+                    error=(
+                        "Разрешены только изображения "
+                        "JPG, JPEG, PNG и WEBP."
+                    )
+                )
 
         # Проверяем цену
         try:
@@ -709,13 +882,67 @@ def admin_edit_product(product_id):
                 error="Цена должна быть положительным целым числом."
             )
 
-        # Обновляем товар
+        # Обновляем основные данные товара
         product.name = name
         product.category = category
         product.brand = brand
         product.price = price
         product.description = description
-        product.image = image or None
+
+        # Проверяем, есть ли уже изображения у товара
+        existing_images = ProductImage.query.filter_by(
+            product_id=product.id
+        ).all()
+
+        # Сохраняем новые изображения
+        for index, image_file in enumerate(valid_images):
+
+            original_name = secure_filename(
+                image_file.filename
+            )
+
+            # Дополнительная защита от файла без расширения
+            if "." not in original_name:
+                continue
+
+            extension = original_name.rsplit(
+                ".",
+                1
+            )[1].lower()
+
+            filename = (
+                f"product_{uuid.uuid4().hex}.{extension}"
+            )
+
+            image_path = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+
+            image_file.save(image_path)
+
+            # Первое новое фото становится главным
+            if index == 0:
+
+                for existing_image in existing_images:
+                    existing_image.is_main = False
+
+                product.image = (
+                    f"images/products/{filename}"
+                )
+
+                is_main = True
+
+            else:
+                is_main = False
+
+            product_image = ProductImage(
+                product_id=product.id,
+                filename=filename,
+                is_main=is_main
+            )
+
+            db.session.add(product_image)
 
         db.session.commit()
 
@@ -744,9 +971,26 @@ def admin_delete_product(product_id):
     # Находим товар
     product = Product.query.get_or_404(product_id)
 
-    # Удаляем товар
+    # Запоминаем файлы всех фотографий товара
+    image_filenames = [
+        image.filename
+        for image in product.images
+    ]
+
+    # Удаляем товар из базы данных
     db.session.delete(product)
     db.session.commit()
+
+    # Удаляем файлы фотографий с диска
+    for filename in image_filenames:
+
+        image_path = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            filename
+        )
+
+        if os.path.exists(image_path):
+            os.remove(image_path)
 
     return redirect(
         url_for("admin_products")

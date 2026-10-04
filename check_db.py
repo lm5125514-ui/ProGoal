@@ -1,5 +1,5 @@
 from app import app
-from models import Order, OrderItem
+from models import Order, OrderItem, Product, ProductImage
 
 
 with app.app_context():
@@ -16,6 +16,7 @@ with app.app_context():
             f"{order.status}"
         )
 
+
     print("\n=== ТОВАРЫ В ЗАКАЗАХ ===")
 
     items = OrderItem.query.all()
@@ -26,4 +27,35 @@ with app.app_context():
             f"Товар ID: {item.product_id} | "
             f"Количество: {item.quantity} | "
             f"Цена: {item.price} ₽"
+        )
+
+
+    print("\n=== ТОВАРЫ ===")
+
+    products = Product.query.all()
+
+    for product in products:
+        print(
+            f"Товар #{product.id} | "
+            f"{product.name} | "
+            f"Основное фото: {product.image}"
+        )
+
+
+    print("\n=== ФОТОГРАФИИ ТОВАРОВ ===")
+
+    images = ProductImage.query.order_by(
+        ProductImage.product_id,
+        ProductImage.id
+    ).all()
+
+    if not images:
+        print("Фотографий в ProductImage пока нет.")
+
+    for image in images:
+        print(
+            f"Товар #{image.product_id} | "
+            f"Фото ID: {image.id} | "
+            f"Файл: {image.filename} | "
+            f"Главное: {image.is_main}"
         )

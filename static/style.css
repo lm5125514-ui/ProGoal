@@ -740,7 +740,6 @@ textarea::placeholder {
 
 .catalog-product-visual {
     position: relative;
-    height: 290px;
 
     overflow: hidden;
 
@@ -750,6 +749,7 @@ textarea::placeholder {
 }
 
 .catalog-product-visual::before {
+    z-index: 0;
     content: "PG";
 
     position: absolute;
@@ -764,6 +764,20 @@ textarea::placeholder {
     font-weight: 900;
     line-height: 1;
     letter-spacing: -15px;
+}
+
+.catalog-product-image {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    object-fit: contain;
+
+    padding: 15px;
+    box-sizing: border-box;
+
+    transition: transform .3s ease;
 }
 
 .catalog-product-number {
@@ -902,6 +916,10 @@ textarea::placeholder {
     background: var(--accent);
 }
 
+.catalog-product-card:hover .catalog-product-image {
+    transform: scale(1.03);
+}
+
 .catalog-product-card:hover .catalog-product-visual::before {
     color: rgba(8,8,8,.09);
 }
@@ -1012,6 +1030,76 @@ textarea::placeholder {
 .product-visual-large::after {
     width: 340px;
     height: 340px;
+}
+
+.product-gallery {
+    position: relative;
+}
+
+.product-visual-large img {
+    position: relative;
+    z-index: 2;
+
+    display: block;
+
+    width: 100%;
+    height: 650px;
+
+    object-fit: contain;
+
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.product-thumbnails {
+    display: flex;
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    overflow-x: auto;
+
+    background: var(--surface-2);
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+}
+
+.product-thumbnail {
+    flex: 0 0 82px;
+
+    width: 82px;
+    height: 82px;
+
+    padding: 0;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        border-color .2s ease,
+        opacity .2s ease;
+}
+
+.product-thumbnail:hover {
+    border-color: var(--accent);
+}
+
+.product-thumbnail.active {
+    border-color: var(--accent);
+}
+
+.product-thumbnail img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
 }
 
 .product-visual-logo {
@@ -5434,6 +5522,21 @@ textarea::placeholder {
     border: 1px solid #242424;
 }
 
+.admin-product-visual img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+
+    padding: 10px;
+    box-sizing: border-box;
+}
+
 .admin-product-visual span {
     color: #333;
     font-size: 38px;
@@ -5843,6 +5946,1068 @@ textarea::placeholder {
     background: #b8ff3d;
     border-color: #b8ff3d;
     color: #080808;
+}
+
+/* =========================================================
+   PROGOAL ADMIN — FINAL BUTTONS & NAV FIX
+   ========================================================= */
+
+/* ---------- ADMIN NAV ---------- */
+
+.admin-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.admin-nav a {
+    min-height: 38px;
+    padding: 0 15px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #292929;
+
+    background: #0d0d0d;
+    color: #888;
+
+    text-decoration: none;
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    white-space: nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.admin-nav a:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+
+    transform: translateY(-1px);
+}
+
+.admin-nav a:last-child {
+    background: transparent;
+    border-color: #242424;
+    color: #666;
+}
+
+.admin-nav a:last-child:hover {
+    background: #1a1a1a;
+    border-color: #444;
+    color: var(--text);
+}
+
+
+/* ---------- HEADER ---------- */
+
+.header .admin-nav {
+    flex-shrink: 0;
+}
+
+
+/* ---------- ADMIN HEADING ---------- */
+
+.admin-heading {
+    gap: 40px;
+}
+
+.admin-heading > div:first-child {
+    min-width: 0;
+}
+
+.admin-heading-actions {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 20px;
+
+    flex-shrink: 0;
+}
+
+.admin-heading-info {
+    flex-shrink: 0;
+}
+
+.admin-heading-add {
+    min-height: 48px;
+    padding: 0 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 22px;
+
+    border: 1px solid var(--accent);
+
+    background: var(--accent);
+    color: var(--bg);
+
+    text-decoration: none;
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    white-space: nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.admin-heading-add span {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.admin-heading-add:hover {
+    background: var(--text);
+    border-color: var(--text);
+
+    transform: translateY(-2px);
+}
+
+
+/* ---------- PRODUCT ACTIONS ---------- */
+
+.admin-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    z-index: 5;
+}
+
+.admin-product-link {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #333;
+    background: #0d0d0d;
+
+    color: #777;
+
+    text-decoration: none;
+
+    font-size: 15px;
+    line-height: 1;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.admin-product-link:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+
+    transform: translateY(-2px);
+}
+
+
+/* ---------- FORM BUTTONS ---------- */
+
+.admin-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.admin-form-submit {
+    min-height: 48px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.admin-form-cancel {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 40px;
+
+    white-space: nowrap;
+}
+
+
+/* ---------- ORDER STATUS ---------- */
+
+.admin-status-form {
+    margin: 0;
+}
+
+.admin-status-select {
+    min-height: 42px;
+    min-width: 150px;
+
+    padding: 0 35px 0 14px;
+
+    border: 1px solid #303030;
+
+    background: #0d0d0d;
+    color: var(--accent);
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+}
+
+
+/* ---------- ORDER DETAIL BACK BUTTON ---------- */
+
+.admin-detail-back {
+    display: flex;
+    align-items: center;
+
+    margin-top: 30px;
+}
+
+.admin-detail-back a {
+    min-height: 44px;
+    padding: 0 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #292929;
+
+    background: #0d0d0d;
+    color: #777;
+
+    text-decoration: none;
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.3px;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.admin-detail-back a:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   ADMIN RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
+
+    .header {
+        gap: 20px;
+    }
+
+    .admin-nav {
+        gap: 4px;
+    }
+
+    .admin-nav a {
+        min-height: 36px;
+        padding: 0 11px;
+
+        font-size: 8px;
+    }
+
+    .admin-heading {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 30px;
+    }
+
+    .admin-heading-actions {
+        width: 100%;
+
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .admin-heading-info {
+        text-align: left;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .header {
+        min-height: auto;
+        padding: 16px 20px;
+
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .header .admin-nav {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+    .admin-nav {
+        width: 100%;
+    }
+
+    .admin-nav a {
+        flex: 1 1 auto;
+
+        min-width: 0;
+    }
+
+    .admin-heading {
+        padding: 45px 0;
+    }
+
+    .admin-heading-actions {
+        align-items: stretch;
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .admin-heading-info {
+        text-align: left;
+    }
+
+    .admin-heading-add {
+        width: 100%;
+    }
+
+    .admin-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-form-submit {
+        width: 100%;
+    }
+
+    .admin-form-cancel {
+        justify-content: center;
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .admin-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-nav a {
+        width: 100%;
+    }
+
+    .admin-nav a:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .admin-heading h1 {
+        font-size: 52px;
+        letter-spacing: -4px;
+    }
+
+    .admin-heading-add {
+        min-height: 46px;
+    }
+
+}
+
+/* ---------- PRODUCT ROW — FIX ID / ACTIONS ---------- */
+
+.admin-product-row {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.admin-product-id {
+    position: static !important;
+    width: 60px;
+    flex-shrink: 0;
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-product-actions {
+    position: relative;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
+    min-width: 78px;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   PROGOAL — ORDER TRACKING
+   ========================================================= */
+
+.track-page {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* ---------- INTRO ---------- */
+
+.track-intro {
+    padding: 70px 0 55px;
+    border-bottom: 1px solid var(--border);
+}
+
+.track-intro-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 45px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+}
+
+.track-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+
+    gap: 60px;
+
+    align-items: end;
+}
+
+.track-kicker {
+    display: block;
+
+    margin-bottom: 14px;
+
+    color: var(--accent);
+
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.track-heading h1 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: clamp(58px, 8vw, 120px);
+    font-weight: 900;
+    line-height: .86;
+    letter-spacing: -6px;
+}
+
+.track-heading p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* ---------- SEARCH ---------- */
+
+.track-search {
+    padding: 45px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.track-search-label {
+    margin-bottom: 25px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+}
+
+.track-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+
+    gap: 12px;
+
+    align-items: end;
+}
+
+.track-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.track-field label {
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.track-field input {
+    width: 100%;
+    height: 52px;
+
+    box-sizing: border-box;
+
+    padding: 0 16px;
+
+    border: 1px solid var(--border);
+
+    outline: none;
+
+    background: #0d0d0d;
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+.track-field input::placeholder {
+    color: #555;
+}
+
+.track-field input:focus {
+    border-color: var(--accent);
+    background: #101010;
+}
+
+.track-submit {
+    height: 52px;
+
+    padding: 0 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    border: 1px solid var(--accent);
+
+    background: var(--accent);
+    color: var(--bg);
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.3px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.track-submit strong {
+    font-size: 17px;
+    font-weight: 400;
+}
+
+.track-submit:hover {
+    background: var(--text);
+    border-color: var(--text);
+
+    transform: translateY(-2px);
+}
+
+
+/* ---------- ERROR ---------- */
+
+.track-error {
+    margin-top: 15px;
+
+    padding: 14px 16px;
+
+    border: 1px solid #4a2424;
+
+    background: #170d0d;
+    color: #ff7777;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .4px;
+}
+
+
+/* ---------- RESULT ---------- */
+
+.track-result {
+    padding: 50px 0 80px;
+}
+
+.track-result-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.track-result-top > div:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+}
+
+.track-result-top span {
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+}
+
+.track-result-top strong {
+    color: var(--text);
+
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.track-status {
+    padding: 10px 14px;
+
+    border: 1px solid var(--accent);
+
+    background: transparent;
+    color: var(--accent);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+
+/* ---------- INFO ---------- */
+
+.track-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.track-info > div {
+    min-height: 105px;
+
+    padding: 25px 20px;
+
+    border-right: 1px solid var(--border);
+}
+
+.track-info > div:first-child {
+    padding-left: 0;
+}
+
+.track-info > div:last-child {
+    border-right: none;
+}
+
+.track-info span {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.track-info strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+
+/* ---------- PROGRESS ---------- */
+
+.track-progress {
+    display: flex;
+    align-items: center;
+
+    padding: 55px 0 10px;
+}
+
+.track-step {
+    flex: 0 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    opacity: .35;
+
+    transition: opacity .25s ease;
+}
+
+.track-step.active {
+    opacity: 1;
+}
+
+.track-step span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid #333;
+
+    background: #0d0d0d;
+    color: #666;
+
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.track-step.active span {
+    border-color: var(--accent);
+
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.track-step strong {
+    color: var(--text);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.track-line {
+    flex: 1;
+
+    height: 1px;
+
+    margin: 0 12px 27px;
+
+    background: #292929;
+}
+
+
+/* =========================================================
+   TRACKING — RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .track-heading {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+    }
+
+    .track-heading h1 {
+        font-size: 75px;
+    }
+
+    .track-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .track-submit {
+        grid-column: 1 / -1;
+    }
+
+    .track-info {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .track-info > div:nth-child(2) {
+        border-right: none;
+    }
+
+    .track-info > div:nth-child(3),
+    .track-info > div:nth-child(4) {
+        border-top: 1px solid var(--border);
+    }
+
+    .track-info > div:nth-child(3) {
+        padding-left: 0;
+    }
+
+    .track-progress {
+        overflow-x: auto;
+
+        padding-bottom: 20px;
+    }
+
+    .track-step {
+        min-width: 90px;
+    }
+
+    .track-line {
+        min-width: 35px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .track-intro {
+        padding: 45px 0;
+    }
+
+    .track-intro-top {
+        margin-bottom: 30px;
+
+        gap: 20px;
+    }
+
+    .track-intro-top span:last-child {
+        display: none;
+    }
+
+    .track-heading h1 {
+        font-size: 52px;
+
+        letter-spacing: -4px;
+    }
+
+    .track-heading p {
+        font-size: 13px;
+    }
+
+    .track-form {
+        grid-template-columns: 1fr;
+    }
+
+    .track-submit {
+        grid-column: auto;
+
+        width: 100%;
+    }
+
+    .track-result {
+        padding-top: 35px;
+    }
+
+    .track-result-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .track-info {
+        grid-template-columns: 1fr;
+    }
+
+    .track-info > div,
+    .track-info > div:first-child,
+    .track-info > div:nth-child(3) {
+        padding: 20px 0;
+
+        border-right: none;
+    }
+
+    .track-info > div:not(:first-child) {
+        border-top: 1px solid var(--border);
+    }
+
+}
+
+/* ---------- TRACKING PAGE — SIDE SPACING ---------- */
+
+.track-page {
+    width: calc(100% - 80px);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+    .track-page {
+        width: calc(100% - 50px);
+    }
+}
+
+@media (max-width: 600px) {
+    .track-page {
+        width: calc(100% - 30px);
+    }
+}
+
+/* =========================================================
+   CATALOG — BRAND FILTER
+   ========================================================= */
+
+.catalog-brand-filter {
+    margin-top: 18px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid var(--border);
+}
+
+.catalog-brand-label {
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+}
+
+.catalog-brand-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+.catalog-brand {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 32px;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--border);
+
+    background: transparent;
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-decoration: none;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.catalog-brand:hover {
+    border-color: var(--accent);
+
+    color: var(--accent);
+}
+
+.catalog-brand.active {
+    border-color: var(--accent);
+
+    background: var(--accent);
+    color: var(--bg);
+}
+
+
+/* ---------- BRAND FILTER — MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+    .catalog-brand-filter {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .catalog-brand-list {
+        gap: 6px;
+    }
+
+    .catalog-brand {
+        min-height: 30px;
+
+        padding: 0 11px;
+
+        font-size: 8px;
+    }
+
 }
 
 
