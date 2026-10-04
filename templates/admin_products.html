@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Товары — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+            </svg>
+
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}">
+            Заказы
+        </a>
+
+        <a href="{{ url_for('admin_products') }}">
+            Товары
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}">
+            Выйти
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="admin-page-new">
+
+    <div style="color: red; font-size: 30px;">
+    TEST VERSION
+</div>
+
+    <div class="admin-top-line">
+
+        <span>
+            PROGOAL / ADMIN
+        </span>
+
+        <span>
+            PRODUCTS
+        </span>
+
+    </div>
+
+
+    <div class="admin-heading">
+
+        <div>
+
+            <span class="admin-kicker">
+                CONTROL PANEL
+            </span>
+
+            <h1>
+                ТОВАРЫ
+            </h1>
+
+        </div>
+
+        <div class="admin-heading-info">
+
+            <span>
+                Всего товаров
+            </span>
+
+            <strong>
+                {{ products|length }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    {% if products %}
+
+        <div class="admin-products-list">
+
+            {% for product in products %}
+
+                <article class="admin-product-card">
+
+                    <div class="admin-product-number">
+
+                        <span>
+                            PRODUCT
+                        </span>
+
+                        <strong>
+                            #{{ product.id }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-product-visual">
+
+                        {% if product.image %}
+
+                            <img src="{{ url_for('static', filename=product.image) }}"
+                                 alt="{{ product.name }}">
+
+                        {% else %}
+
+                            <span>
+                                PG
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="admin-product-main">
+
+                        <span class="admin-order-label">
+                            ТОВАР
+                        </span>
+
+                        <h2>
+                            {{ product.name }}
+                        </h2>
+
+                        <p>
+                            {{ product.brand }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="admin-product-bottom">
+
+                        <div class="admin-product-category">
+
+                            <span>
+                                КАТЕГОРИЯ
+                            </span>
+
+                            <p>
+                                {{ product.category }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="admin-product-price">
+
+                            <span>
+                                ЦЕНА
+                            </span>
+
+                            <strong>
+                                {{ product.price }} ₽
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-product-actions">
+                        <a href="{{ url_for('product', product_id=product.id) }}"
+                           class="admin-product-link"
+                           title="Открыть товар">
+                            ↗
+                        </a>
+
+                        <a href="{{ url_for('admin_edit_product', product_id=product.id) }}"
+                           class="admin-product-edit"
+                           title="Редактировать товар">
+
+                            EDIT
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('admin_delete_product', product_id=product.id) }}"
+                              onsubmit="return confirm('Удалить этот товар?');">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   value="{{ csrf_token() }}">
+
+                            <button type="submit"
+                                    class="admin-product-delete"
+                                    title="Удалить товар">
+                                ×
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-empty">
+
+            <span>
+                NO PRODUCTS
+            </span>
+
+            <h2>
+                Товаров пока нет
+            </h2>
+
+            <p>
+                Добавленные товары появятся здесь.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+
+    </div>
+
+    <p>
+        © 2026 ProGoal. Панель управления.</p>
+
+</footer>
+
+
+</body>
+
+</html>

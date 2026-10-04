@@ -578,6 +578,179 @@ def admin_logout():
         url_for("admin_login")
     )
 
+# =========================
+# АДМИН — ТОВАРЫ
+# =========================
+
+@app.route("/admin/products")
+def admin_products():
+
+    # Проверяем авторизацию администратора
+    if "admin_id" not in session:
+        return redirect(
+            url_for("admin_login")
+        )
+
+    products = Product.query.order_by(
+        Product.id.desc()
+    ).all()
+
+    return render_template(
+        "admin_products.html",
+        products=products
+    )
+
+@app.route("/admin/products/add", methods=["GET", "POST"])
+def admin_add_product():
+
+    # Проверяем авторизацию администратора
+    if "admin_id" not in session:
+        return redirect(
+            url_for("admin_login")
+        )
+
+    if request.method == "POST":
+
+        name = request.form.get("name", "").strip()
+        category = request.form.get("category", "").strip()
+        brand = request.form.get("brand", "").strip()
+        price = request.form.get("price", "").strip()
+        description = request.form.get("description", "").strip()
+        image = request.form.get("image", "").strip()
+
+        # Проверяем обязательные поля
+        if not name or not category or not brand or not price or not description:
+            return render_template(
+                "admin_product_add.html",
+                error="Заполните все обязательные поля.",
+                form=request.form
+            )
+
+        # Проверяем цену
+        try:
+            price = int(price)
+
+            if price <= 0:
+                raise ValueError
+
+        except ValueError:
+            return render_template(
+                "admin_product_add.html",
+                error="Цена должна быть положительным целым числом.",
+                form=request.form
+            )
+
+        # Создаём товар
+        product = Product(
+            name=name,
+            category=category,
+            brand=brand,
+            price=price,
+            description=description,
+            image=image or None
+        )
+
+        db.session.add(product)
+        db.session.commit()
+
+        return redirect(
+            url_for("admin_products")
+        )
+
+    return render_template(
+        "admin_product_add.html",
+        error=None,
+        form={}
+    )
+
+@app.route(
+    "/admin/products/<int:product_id>/edit",
+    methods=["GET", "POST"]
+)
+def admin_edit_product(product_id):
+
+    # Проверяем авторизацию администратора
+    if "admin_id" not in session:
+        return redirect(
+            url_for("admin_login")
+        )
+
+    # Находим товар
+    product = Product.query.get_or_404(product_id)
+
+    if request.method == "POST":
+
+        name = request.form.get("name", "").strip()
+        category = request.form.get("category", "").strip()
+        brand = request.form.get("brand", "").strip()
+        price = request.form.get("price", "").strip()
+        description = request.form.get("description", "").strip()
+        image = request.form.get("image", "").strip()
+
+        # Проверяем обязательные поля
+        if not name or not category or not brand or not price or not description:
+            return render_template(
+                "admin_product_edit.html",
+                product=product,
+                error="Заполните все обязательные поля."
+            )
+
+        # Проверяем цену
+        try:
+            price = int(price)
+
+            if price <= 0:
+                raise ValueError
+
+        except ValueError:
+            return render_template(
+                "admin_product_edit.html",
+                product=product,
+                error="Цена должна быть положительным целым числом."
+            )
+
+        # Обновляем товар
+        product.name = name
+        product.category = category
+        product.brand = brand
+        product.price = price
+        product.description = description
+        product.image = image or None
+
+        db.session.commit()
+
+        return redirect(
+            url_for("admin_products")
+        )
+
+    return render_template(
+        "admin_product_edit.html",
+        product=product,
+        error=None
+    )
+
+@app.route(
+    "/admin/products/<int:product_id>/delete",
+    methods=["POST"]
+)
+def admin_delete_product(product_id):
+
+    # Проверяем авторизацию администратора
+    if "admin_id" not in session:
+        return redirect(
+            url_for("admin_login")
+        )
+
+    # Находим товар
+    product = Product.query.get_or_404(product_id)
+
+    # Удаляем товар
+    db.session.delete(product)
+    db.session.commit()
+
+    return redirect(
+        url_for("admin_products")
+    )
 
 # =========================
 # АДМИН — ЗАКАЗЫ

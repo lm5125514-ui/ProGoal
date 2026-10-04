@@ -5359,3 +5359,490 @@ textarea::placeholder {
     }
 
 }
+
+/* =========================
+   АДМИН — ТОВАРЫ
+   ========================= */
+
+.admin-products-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 50px;
+    background: #242424;
+    border: 1px solid #242424;
+}
+
+.admin-product-card {
+    position: relative;
+    min-height: 360px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #0d0d0d;
+    transition:
+        background .25s ease,
+        transform .25s ease;
+}
+
+.admin-product-card:hover {
+    background: #111111;
+    transform: translateY(-3px);
+}
+
+
+/* Верх карточки */
+
+.admin-product-number {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 18px;
+    border-bottom: 1px solid #242424;
+
+    color: #555;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.admin-product-number strong {
+    color: #b8ff3d;
+    font-size: 9px;
+}
+
+
+/* Визуальная область */
+
+.admin-product-visual {
+    height: 125px;
+    margin: 20px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111 0%,
+            #0a0a0a 100%
+        );
+
+    border: 1px solid #242424;
+}
+
+.admin-product-visual span {
+    color: #333;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -3px;
+}
+
+
+/* Основная информация */
+
+.admin-product-main {
+    margin-top: 5px;
+}
+
+.admin-product-main .admin-order-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #555;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.admin-product-main h2 {
+    margin: 0;
+
+    color: #f5f5f5;
+    font-size: 20px;
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+}
+
+.admin-product-main p {
+    margin: 8px 0 0;
+
+    color: #777;
+    font-size: 11px;
+}
+
+
+/* Нижняя часть */
+
+.admin-product-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-top: 25px;
+}
+
+
+/* Категория */
+
+.admin-product-category span,
+.admin-product-price span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #555;
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.admin-product-category p {
+    margin: 0;
+
+    max-width: 150px;
+
+    color: #888;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/* Цена */
+
+.admin-product-price {
+    text-align: right;
+}
+
+.admin-product-price strong {
+    color: #f5f5f5;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+
+/* Кнопка */
+
+.admin-product-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    gap: 7px;
+}
+
+.admin-product-link {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #333;
+
+    color: #777;
+    text-decoration: none;
+
+    font-size: 16px;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.admin-product-link:hover {
+    background: #b8ff3d;
+    border-color: #b8ff3d;
+    color: #080808;
+}
+
+
+/* Адаптив */
+
+@media (max-width: 1000px) {
+
+    .admin-products-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .admin-products-list {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-product-card {
+        min-height: 330px;
+    }
+
+}
+
+/* =========================
+   АДМИН — ДОБАВЛЕНИЕ ТОВАРА
+   ========================= */
+
+.admin-product-form {
+    max-width: 1000px;
+    margin-top: 50px;
+    border-top: 1px solid #242424;
+}
+
+.admin-form-section {
+    padding: 35px 0;
+    border-bottom: 1px solid #242424;
+}
+
+.admin-form-section-title {
+    display: block;
+    margin-bottom: 25px;
+    color: #555;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.admin-form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form-field label {
+    margin-bottom: 10px;
+    color: #777;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+}
+
+.admin-form-field input,
+.admin-form-field select,
+.admin-form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 18px;
+
+    border: 1px solid #292929;
+    outline: none;
+
+    background: #0d0d0d;
+    color: #f5f5f5;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+.admin-form-field input::placeholder,
+.admin-form-field textarea::placeholder {
+    color: #444;
+}
+
+.admin-form-field input:focus,
+.admin-form-field select:focus,
+.admin-form-field textarea:focus {
+    border-color: #b8ff3d;
+    background: #101010;
+}
+
+.admin-form-field select {
+    cursor: pointer;
+    appearance: none;
+}
+
+.admin-form-field textarea {
+    min-height: 170px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.admin-form-field small {
+    margin-top: 9px;
+    color: #555;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.admin-form-error {
+    max-width: 1000px;
+    margin-top: 35px;
+    padding: 16px 18px;
+
+    border-left: 3px solid #b8ff3d;
+
+    background: #111;
+    color: #b8ff3d;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.admin-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    max-width: 1000px;
+
+    padding: 30px 0 70px;
+}
+
+.admin-form-cancel {
+    color: #666;
+    text-decoration: none;
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+
+    transition: color .2s ease;
+}
+
+.admin-form-cancel:hover {
+    color: #f5f5f5;
+}
+
+.admin-form-submit {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 15px 22px;
+
+    border: 1px solid #b8ff3d;
+    background: #b8ff3d;
+    color: #080808;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+.admin-form-submit span {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.admin-form-submit:hover {
+    background: transparent;
+    color: #b8ff3d;
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   АДАПТИВ
+   ========================= */
+
+@media (max-width: 700px) {
+
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-actions {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .admin-form-submit {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+}
+
+.admin-product-edit {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #333;
+
+    color: #777;
+    text-decoration: none;
+
+    font-size: 16px;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.admin-product-edit:hover {
+    background: #b8ff3d;
+    border-color: #b8ff3d;
+    color: #080808;
+}
+
+.admin-product-actions form {
+    margin: 0;
+}
+
+.admin-product-delete {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #333;
+
+    background: transparent;
+
+    color: #777;
+
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 300;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.admin-product-delete:hover {
+    background: #b8ff3d;
+    border-color: #b8ff3d;
+    color: #080808;
+}
+
+

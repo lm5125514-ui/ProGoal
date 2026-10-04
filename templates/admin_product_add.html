@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Добавить товар — ProGoal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="{{ url_for('home') }}" class="brand">
+
+        <span class="brand-mark">
+
+            <svg viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <path d="M18 73L25 25H57L68 36H40L36 52H57L68 41"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 36L78 36L87 45L75 57L62 57"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M57 62L69 62L82 75L69 88L48 67"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+                <path d="M42 62L55 49"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="10"
+                      stroke-linecap="square"/>
+
+            </svg>
+
+        </span>
+
+        <span class="brand-name">
+            PROGOAL
+        </span>
+
+    </a>
+
+
+    <nav class="nav">
+
+        <a href="{{ url_for('home') }}">
+            Главная
+        </a>
+
+        <a href="{{ url_for('catalog') }}">
+            Каталог
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}">
+            Заказы
+        </a>
+
+        <a href="{{ url_for('admin_products') }}">
+            Товары
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}">
+            Выйти
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="admin-page-new">
+
+    <div class="admin-top-line">
+
+        <span>
+            PROGOAL / ADMIN
+        </span>
+
+        <span>
+            NEW PRODUCT
+        </span>
+
+    </div>
+
+
+    <div class="admin-heading">
+
+        <div>
+
+            <span class="admin-kicker">
+                CONTROL PANEL
+            </span>
+
+            <h1>
+                ДОБАВИТЬ ТОВАР
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="admin-form-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form method="POST"
+          class="admin-product-form">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+
+        <div class="admin-form-section">
+
+            <span class="admin-form-section-title">
+                ОСНОВНАЯ ИНФОРМАЦИЯ
+            </span>
+
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-field">
+
+                    <label for="name">
+                        НАЗВАНИЕ ТОВАРА
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ form.get('name', '') }}"
+                        placeholder="Например: ProGoal Elite"
+                        maxlength="150"
+                        required>
+
+                </div>
+
+
+                <div class="admin-form-field">
+
+                    <label for="brand">
+                        БРЕНД
+                    </label>
+
+                    <input
+                        type="text"
+                        id="brand"
+                        name="brand"
+                        value="{{ form.get('brand', '') }}"
+                        placeholder="Например: Adidas"
+                        maxlength="100"
+                        required>
+
+                </div>
+
+
+                <div class="admin-form-field">
+
+                    <label for="category">
+                        КАТЕГОРИЯ
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required>
+
+                        <option value="">
+                            Выберите категорию
+                        </option>
+
+                        <option value="Футбольная форма"
+                            {% if form.get('category') == 'Футбольная форма' %}selected{% endif %}>
+                            Футбольная форма
+                        </option>
+
+                        <option value="Бутсы"
+                            {% if form.get('category') == 'Бутсы' %}selected{% endif %}>
+                            Бутсы
+                        </option>
+
+                        <option value="Мячи"
+                            {% if form.get('category') == 'Мячи' %}selected{% endif %}>
+                            Мячи
+                        </option>
+
+                        <option value="Вратарская экипировка"
+                            {% if form.get('category') == 'Вратарская экипировка' %}selected{% endif %}>
+                            Вратарская экипировка
+                        </option>
+
+                        <option value="Аксессуары"
+                            {% if form.get('category') == 'Аксессуары' %}selected{% endif %}>
+                            Аксессуары
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-field">
+
+                    <label for="price">
+                        ЦЕНА, ₽
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        value="{{ form.get('price', '') }}"
+                        placeholder="4990"
+                        min="1"
+                        step="1"
+                        required>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-form-section">
+
+            <span class="admin-form-section-title">
+                ОПИСАНИЕ
+            </span>
+
+
+            <div class="admin-form-field">
+
+                <label for="description">
+                    ОПИСАНИЕ ТОВАРА
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="7"
+                    maxlength="2000"
+                    placeholder="Расскажите о товаре..."
+                    required>{{ form.get('description', '') }}</textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-form-section">
+
+            <span class="admin-form-section-title">
+                ИЗОБРАЖЕНИЕ
+            </span>
+
+
+            <div class="admin-form-field">
+
+                <label for="image">
+                    ПУТЬ К ИЗОБРАЖЕНИЮ
+                </label>
+
+                <input
+                    type="text"
+                    id="image"
+                    name="image"
+                    value="{{ form.get('image', '') }}"
+                    placeholder="images/product.jpg"
+                    maxlength="255">
+
+                <small>
+                    Можно оставить пустым — изображение добавим позже.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-form-actions">
+
+            <a href="{{ url_for('admin_products') }}"
+               class="admin-form-cancel">
+                ОТМЕНА
+            </a>
+
+            <button type="submit"
+                    class="admin-form-submit">
+                ДОБАВИТЬ ТОВАР
+                <span>↗</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+
+        <span class="footer-mark">
+            PG
+        </span>
+
+        <span>
+            PROGOAL
+        </span>
+
+    </div>
+
+    <p>
+        © 2026 ProGoal. Панель управления.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
