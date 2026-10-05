@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заказ #{{ order.id }} — ProGoal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="header">
+<a href="{{ url_for('home') }}" class="brand"><span class="brand-name">PROGOAL</span></a>
+<nav class="nav">
+<a href="{{ url_for('catalog') }}">Каталог</a>
+<a href="{{ url_for('account') }}">Личный кабинет</a>
+<a href="{{ url_for('cart') }}" class="nav-cart">Корзина</a>
+</nav>
+</header>
+<main class="account-page">
+<section class="account-heading">
+<span class="account-kicker">PROGOAL / ORDER</span>
+<h1>ЗАКАЗ #{{ order.id }}</h1>
+<p>Текущий статус: <strong>{{ order.status }}</strong></p>
+</section>
+<section class="account-order-detail">
+<div class="account-status"><span>СТАТУС</span><strong>{{ order.status }}</strong></div>
+{% for item in products %}
+<div class="account-order-item">
+<div><strong>{{ item.product.name if item.product else 'Товар удалён' }}</strong><span>{{ item.quantity }} шт. × {{ item.price }} ₽</span></div>
+<strong>{{ item.item_total }} ₽</strong>
+</div>
+{% endfor %}
+<div class="account-total"><span>ИТОГО</span><strong>{{ order.total }} ₽</strong></div>
+<a href="{{ url_for('account') }}" class="checkout-back">← Вернуться в личный кабинет</a>
+</section>
+</main>
+</body>
+</html>
