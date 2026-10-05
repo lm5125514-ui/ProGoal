@@ -99,3 +99,67 @@ class Admin(db.Model):
         db.String(255),
         nullable=False
     )
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    email = db.Column(
+        db.String(150),
+        unique=True,
+        nullable=False
+    )
+
+    phone = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    password = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        server_default=db.func.now(),
+        nullable=False
+    )
+
+
+class UserOrder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    order_id = db.Column(
+        db.Integer,
+        db.ForeignKey("order.id"),
+        nullable=False,
+        unique=True
+    )
+
+    user = db.relationship(
+        "User",
+        backref=db.backref(
+            "user_orders",
+            lazy=True,
+            cascade="all, delete-orphan"
+        )
+    )
+
+    order = db.relationship(
+        "Order",
+        backref=db.backref(
+            "user_order_link",
+            uselist=False
+        )
+    )
