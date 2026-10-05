@@ -104,8 +104,12 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    products = Product.query.order_by(Product.id.desc()).limit(8).all()
 
+    return render_template(
+        "index.html",
+        products=products
+    )
 
 # =========================
 # КАТАЛОГ
@@ -118,24 +122,110 @@ def contacts():
 @app.route("/catalog")
 def catalog():
 
-    selected_category = request.args.get("category")
-    selected_brand = request.args.get("brand")
+    selected_category = request.args.get("category", "").strip()
+    selected_brand = request.args.get("brand", "").strip()
+
+    min_price_raw = request.args.get("min_price", "").strip()
+    max_price_raw = request.args.get("max_price", "").strip()
+
+    sort = request.args.get("sort", "newest").strip()
 
     query = Product.query
 
+    # =========================
+    # КАТЕГОРИЯ
+    # =========================
+
     if selected_category:
-        query = query.filter_by(
-            category=selected_category
+        query = query.filter(
+            Product.category == selected_category
         )
+
+    # =========================
+    # БРЕНД
+    # =========================
 
     if selected_brand:
-        query = query.filter_by(
-            brand=selected_brand
+        query = query.filter(
+            Product.brand == selected_brand
         )
 
-    products = query.order_by(
-        Product.id.desc()
-    ).all()
+    # =========================
+    # МИНИМАЛЬНАЯ ЦЕНА
+    # =========================
+
+    min_price = None
+
+    if min_price_raw:
+        try:
+            min_price = int(min_price_raw)
+
+            if min_price >= 0:
+                query = query.filter(
+                    Product.price >= min_price
+                )
+            else:
+                min_price = None
+
+        except ValueError:
+            min_price = None
+
+    # =========================
+    # МАКСИМАЛЬНАЯ ЦЕНА
+    # =========================
+
+    max_price = None
+
+    if max_price_raw:
+        try:
+            max_price = int(max_price_raw)
+
+            if max_price >= 0:
+                query = query.filter(
+                    Product.price <= max_price
+                )
+            else:
+                max_price = None
+
+        except ValueError:
+            max_price = None
+
+    # =========================
+    # СОРТИРОВКА
+    # =========================
+
+    if sort == "price_asc":
+
+        query = query.order_by(
+            Product.price.asc()
+        )
+
+    elif sort == "price_desc":
+
+        query = query.order_by(
+            Product.price.desc()
+        )
+
+    elif sort == "name":
+
+        query = query.order_by(
+            Product.name.asc()
+        )
+
+    else:
+
+        # По умолчанию — новые товары сверху
+        sort = "newest"
+
+        query = query.order_by(
+            Product.id.desc()
+        )
+
+    products = query.all()
+
+    # =========================
+    # СПИСОК БРЕНДОВ
+    # =========================
 
     brands = [
         row[0]
@@ -151,9 +241,11 @@ def catalog():
         products=products,
         selected_category=selected_category,
         selected_brand=selected_brand,
-        brands=brands
+        brands=brands,
+        min_price=min_price_raw,
+        max_price=max_price_raw,
+        sort=sort
     )
-
 
 # =========================
 # СТРАНИЦА ТОВАРА
