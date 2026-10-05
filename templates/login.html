@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход — ProGoal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="header">
+<a href="{{ url_for('home') }}" class="brand"><span class="brand-name">PROGOAL</span></a>
+<nav class="nav">
+<a href="{{ url_for('catalog') }}">Каталог</a>
+<a href="{{ url_for('cart') }}" class="nav-cart">Корзина</a>
+</nav>
+</header>
+<main class="account-page">
+<section class="account-auth">
+<span class="account-kicker">PROGOAL / ACCOUNT</span>
+<h1>ВХОД</h1>
+<p>Войди в аккаунт, чтобы видеть историю и статусы заказов.</p>
+{% if error %}<div class="checkout-error-new"><span>!</span><div>{{ error }}</div></div>{% endif %}
+<form method="POST" class="account-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label for="email">EMAIL</label>
+<input type="email" id="email" name="email" autocomplete="email" required>
+<label for="password">ПАРОЛЬ</label>
+<input type="password" id="password" name="password" autocomplete="current-password" required>
+<button type="submit" class="checkout-submit-new"><span>ВОЙТИ</span><span>→</span></button>
+</form>
+<p>Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+</section>
+</main>
+</body>
+</html>
