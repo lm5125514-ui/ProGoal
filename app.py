@@ -13,7 +13,7 @@ from flask import (
     url_for
 )
 
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 import uuid
 from flask_wtf import CSRFProtect
@@ -21,7 +21,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from database import db
-from models import Product, ProductImage, Order, OrderItem, Admin
+from models import Product, ProductImage, Order, OrderItem, Admin, User, UserOrder
 
 
 app = Flask(__name__)
@@ -96,6 +96,168 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+
+# =========================
+# ПОЛЬЗОВАТЕЛЬ — РЕГИСТРАЦИЯ
+# =========================
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if session.get("user_id"):
+        return redirect(url_for("account"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        error = None
+
+        if not name or len(name) < 2 or len(name) > 100:
+            error = "Имя должно содержать от 2 до 100 символов."
+        elif not email or len(email) > 150 or "@" not in email:
+            error = "Введите корректный email."
+        elif len(password) < 8:
+            error = "Пароль должен содержать минимум 8 символов."
+        elif password != password_confirm:
+            error = "Пароли не совпадают."
+        elif User.query.filter_by(email=email).first():
+            error = "Пользователь с таким email уже зарегистрирован."
+
+        if error:
+            return render_template("register.html", error=error)
+
+        user = User(
+            name=name,
+            email=email,
+            phone=phone or None,
+            password=generate_password_hash(password)
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        session["user_id"] = user.id
+
+        return redirect(url_for("account"))
+
+    return render_template("register.html", error=None)
+
+
+# =========================
+# ПОЛЬЗОВАТЕЛЬ — ВХОД
+# =========================
+
+@app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute", methods=["POST"])
+def login():
+
+    if session.get("user_id"):
+        return redirect(url_for("account"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and check_password_hash(user.password, password):
+            session["user_id"] = user.id
+            return redirect(url_for("account"))
+
+        return render_template(
+            "login.html",
+            error="Неверный email или пароль."
+        )
+
+    return render_template("login.html", error=None)
+
+
+# =========================
+# ПОЛЬЗОВАТЕЛЬ — ВЫХОД
+# =========================
+
+@app.post("/logout")
+def logout():
+
+    session.pop("user_id", None)
+
+    return redirect(url_for("home"))
+
+
+# =========================
+# ЛИЧНЫЙ КАБИНЕТ
+# =========================
+
+@app.route("/account")
+def account():
+
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+
+    links = UserOrder.query.filter_by(
+        user_id=user.id
+    ).order_by(
+        UserOrder.id.desc()
+    ).all()
+
+    orders = [link.order for link in links if link.order]
+
+    return render_template(
+        "account.html",
+        user=user,
+        orders=orders
+    )
+
+
+# =========================
+# ЗАКАЗ В ЛИЧНОМ КАБИНЕТЕ
+# =========================
+
+@app.route("/account/orders/<int:order_id>")
+def account_order(order_id):
+
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return redirect(url_for("login"))
+
+    link = UserOrder.query.filter_by(
+        user_id=user_id,
+        order_id=order_id
+    ).first_or_404()
+
+    order = link.order
+
+    items = OrderItem.query.filter_by(
+        order_id=order.id
+    ).all()
+
+    products = []
+
+    for item in items:
+        product = Product.query.get(item.product_id)
+
+        products.append({
+            "product": product,
+            "quantity": item.quantity,
+            "price": item.price,
+            "item_total": item.price * item.quantity
+        })
+
+    return render_template(
+        "account_order.html",
+        order=order,
+        products=products
+    )
 
 
 # =========================
@@ -472,6 +634,18 @@ def checkout():
 
         # Запоминаем последний созданный заказ
         session["last_order_id"] = order.id
+
+        # Если пользователь вошёл в аккаунт — связываем заказ
+        user_id = session.get("user_id")
+
+        if user_id:
+            db.session.add(
+                UserOrder(
+                    user_id=user_id,
+                    order_id=order.id
+                )
+            )
+            db.session.commit()
 
         # Очищаем корзину
         session["cart"] = {}

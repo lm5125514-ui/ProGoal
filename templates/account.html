@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Личный кабинет — ProGoal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="header">
+<a href="{{ url_for('home') }}" class="brand"><span class="brand-name">PROGOAL</span></a>
+<nav class="nav">
+<a href="{{ url_for('home') }}">Главная</a>
+<a href="{{ url_for('catalog') }}">Каталог</a>
+<a href="{{ url_for('cart') }}" class="nav-cart">Корзина</a>
+<form method="POST" action="{{ url_for('logout') }}" class="nav-logout-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Выйти</button>
+</form>
+</nav>
+</header>
+<main class="account-page">
+<section class="account-heading">
+<span class="account-kicker">PROGOAL / ACCOUNT</span>
+<h1>ЛИЧНЫЙ КАБИНЕТ</h1>
+<p>Привет, <strong>{{ user.name }}</strong>. Здесь собраны твои заказы.</p>
+</section>
+<section class="account-grid">
+<div class="account-profile">
+<span>ПРОФИЛЬ</span>
+<h2>{{ user.name }}</h2>
+<p>{{ user.email }}</p>
+{% if user.phone %}<p>{{ user.phone }}</p>{% endif %}
+</div>
+<div class="account-orders">
+<div class="account-orders-head"><span>МОИ ЗАКАЗЫ</span><strong>{{ orders|length }}</strong></div>
+{% if orders %}
+{% for order in orders %}
+<a href="{{ url_for('account_order', order_id=order.id) }}" class="account-order-card">
+<div><span>ЗАКАЗ</span><strong>#{{ order.id }}</strong></div>
+<div><span>СТАТУС</span><strong>{{ order.status }}</strong></div>
+<div><span>СУММА</span><strong>{{ order.total }} ₽</strong></div>
+<span class="account-order-arrow">→</span>
+</a>
+{% endfor %}
+{% else %}
+<div class="account-empty"><h2>ЗАКАЗОВ ПОКА НЕТ</h2><p>Оформи первый заказ — он появится здесь автоматически.</p><a href="{{ url_for('catalog') }}">Перейти в каталог →</a></div>
+{% endif %}
+</div>
+</section>
+</main>
+</body>
+</html>

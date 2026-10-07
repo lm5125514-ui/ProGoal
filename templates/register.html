@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Регистрация — ProGoal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="header">
+<a href="{{ url_for('home') }}" class="brand"><span class="brand-name">PROGOAL</span></a>
+<nav class="nav">
+<a href="{{ url_for('catalog') }}">Каталог</a>
+<a href="{{ url_for('cart') }}" class="nav-cart">Корзина</a>
+</nav>
+</header>
+<main class="account-page">
+<section class="account-auth">
+<span class="account-kicker">PROGOAL / ACCOUNT</span>
+<h1>РЕГИСТРАЦИЯ</h1>
+<p>Создай аккаунт, чтобы хранить историю своих заказов.</p>
+{% if error %}<div class="checkout-error-new"><span>!</span><div>{{ error }}</div></div>{% endif %}
+<form method="POST" class="account-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label for="name">ИМЯ</label>
+<input type="text" id="name" name="name" maxlength="100" autocomplete="name" required>
+<label for="email">EMAIL</label>
+<input type="email" id="email" name="email" maxlength="150" autocomplete="email" required>
+<label for="phone">ТЕЛЕФОН</label>
+<input type="tel" id="phone" name="phone" maxlength="50" autocomplete="tel">
+<label for="password">ПАРОЛЬ</label>
+<input type="password" id="password" name="password" minlength="8" autocomplete="new-password" required>
+<label for="password_confirm">ПОВТОРИТЕ ПАРОЛЬ</label>
+<input type="password" id="password_confirm" name="password_confirm" minlength="8" autocomplete="new-password" required>
+<button type="submit" class="checkout-submit-new"><span>СОЗДАТЬ АККАУНТ</span><span>→</span></button>
+</form>
+<p>Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+</section>
+</main>
+</body>
+</html>

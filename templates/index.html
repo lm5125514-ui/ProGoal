@@ -84,6 +84,16 @@
             Контакты
         </a>
 
+        {% if session.get("user_id") %}
+        <a href="{{ url_for('account') }}">
+            Кабинет
+        </a>
+        {% else %}
+        <a href="{{ url_for('login') }}">
+            Войти
+        </a>
+        {% endif %}
+
         <a href="{{ url_for('cart') }}" class="nav-cart">
             Корзина
         </a>
